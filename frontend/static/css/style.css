@@ -1,0 +1,13 @@
+/* style.css — Auto EDA Analytics Dashboard */
+/* Semua styling utama ada di index.html <style> tag */
+/* File ini untuk override atau tambahan spesifik */
+
+/* Pastikan font tersedia */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap');
+
+/* Print styles untuk report */
+@media print {
+    .sidebar, .topbar, .btn-analyze, .theme-btn { display: none !important; }
+    .main-wrap { margin-left: 0 !important; }
+    .page { display: block !important; }
+}

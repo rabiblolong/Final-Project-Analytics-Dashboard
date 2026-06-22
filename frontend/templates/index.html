@@ -1,0 +1,2311 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analytics Dashboard — SD-1306</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<style>
+:root{--t9:#042f2e;--t8:#115e59;--t6:#0d9488;--t4:#2dd4bf;--t2:#99f6e4;--t1:#f0fdfa;
+--bg:#f1f5f4;--sf:#fff;--sf2:#f8fffe;--sb:#fff;--sbb:#e5e7eb;
+--tp:#0f172a;--ts:#475569;--tm:#94a3b8;--bd:#e2e8f0;--bds:#cbd5e1;
+--ac:#0d9488;--acs:#e6faf8;
+--k1:#0d9488;--k1b:#e6faf8;--k2:#0891b2;--k2b:#e0f7fb;--k3:#7c3aed;--k3b:#f3eeff;--k4:#d97706;--k4b:#fff8e1;
+--k5:#dc2626;--k5b:#fee2e2;
+--sh:0 1px 3px rgba(0,0,0,.06);--shm:0 4px 16px rgba(0,0,0,.08);}
+[data-theme="dark"]{--bg:#0d1117;--sf:#161b22;--sf2:#1c2330;--sb:#111827;--sbb:#21262d;
+--tp:#e6edf3;--ts:#8b949e;--tm:#484f58;--bd:#21262d;--bds:#30363d;
+--ac:#2dd4bf;--acs:#042f2e;
+--k1:#2dd4bf;--k1b:#042f2e;--k2:#22d3ee;--k2b:#083344;--k3:#a78bfa;--k3b:#1e1b4b;--k4:#fbbf24;--k4b:#292524;
+--k5:#f87171;--k5b:#450a0a;
+--sh:0 1px 3px rgba(0,0,0,.3);--shm:0 4px 16px rgba(0,0,0,.4);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--tp);transition:background .3s,color .3s}
+.screen{display:none;width:100vw;height:100vh}.screen.active{display:flex}
+/* LANDING */
+#scLanding{background:linear-gradient(135deg,#042f2e 0%,#115e59 40%,#0d9488 70%,#2dd4bf 100%);flex-direction:column;align-items:center;justify-content:center;padding:16px;gap:14px;position:relative;overflow:hidden}
+#scLanding::before{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.05)}
+.lw{text-align:center;z-index:1}
+.lw-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:4px 14px;font-size:11px;color:rgba(255,255,255,.85);margin-bottom:8px}
+.lw-title{font-size:24px;font-weight:900;color:white;letter-spacing:-.5px;line-height:1.2;margin-bottom:4px}
+.lw-sub{font-size:11px;color:rgba(255,255,255,.6);margin-bottom:6px}
+.lw-pills{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap}
+.pill{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);border-radius:16px;padding:2px 10px;font-size:10px;color:rgba(255,255,255,.85);font-weight:600}
+.logos-row{display:flex;align-items:center;justify-content:center;gap:14px;z-index:1}
+.itsb-box{background:white;border-radius:16px;padding:12px 18px;display:inline-flex;align-items:center;box-shadow:0 8px 24px rgba(0,0,0,.18)}
+.itsb-txt{font-size:22px;font-weight:900;letter-spacing:-.5px}
+.it{color:#102a5c}.s{color:#7f1d1d}.b2{color:#102a5c}
+.mgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;max-width:920px;width:100%;z-index:1}
+.mc{background:rgba(255,255,255,.12);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:16px 12px;text-align:center;transition:all .25s}
+.mc:hover{background:rgba(255,255,255,.2);transform:translateY(-3px)}
+.mc.ketua{background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.4);box-shadow:0 4px 20px rgba(0,0,0,.15)}
+.mav{width:120px;height:120px;border-radius:50%;background:linear-gradient(135deg,rgba(255,255,255,.35),rgba(255,255,255,.15));border:4px solid rgba(255,255,255,.65);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:24px;font-weight:900;color:white;object-fit:cover}
+.mc.ketua .mav{border-color:#fbbf24}
+.mbadge{display:inline-block;background:rgba(255,255,255,.2);color:white;font-size:10px;font-weight:700;padding:3px 10px;border-radius:10px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.mc.ketua .mbadge{background:rgba(251,191,36,.4);color:#fef3c7}
+.mname{font-size:14px;font-weight:800;color:white;line-height:1.3;margin-bottom:6px}
+.mrole{font-size:10px;color:rgba(255,255,255,.8);margin-bottom:6px;line-height:1.4}
+.mfile{font-size:8px;color:rgba(255,255,255,.65);font-family:'DM Mono',monospace}
+.btn-enter{background:white;color:#115e59;border:none;padding:9px 28px;border-radius:40px;font-size:13px;font-weight:800;cursor:pointer;transition:all .2s;box-shadow:0 4px 20px rgba(0,0,0,.2);display:inline-flex;align-items:center;gap:8px;z-index:1}
+.btn-enter:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,.25)}
+/* APP */
+#scApp{flex-direction:row;height:100vh;overflow:hidden}
+.sidebar{width:220px;height:100vh;background:var(--sb);border-right:1px solid var(--sbb);display:flex;flex-direction:column;padding:14px 8px;flex-shrink:0;transition:width .25s,background .3s;overflow:hidden;position:relative;z-index:10}
+.sidebar.collapsed{width:52px}
+.sidebar.collapsed .sb-text,.sidebar.collapsed .nav-label{display:none}
+.sidebar.collapsed .nav{justify-content:center}
+.sidebar.collapsed .nav i{margin:0}
+.sidebar.collapsed .sb-logo{justify-content:center}
+.sb-logo{display:flex;align-items:center;gap:8px;padding:2px 4px 12px;border-bottom:1px solid var(--bd);margin-bottom:8px}
+.sb-ico{width:30px;height:30px;background:linear-gradient(135deg,var(--t6),var(--t4));border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sb-ico i{color:white;font-size:13px}
+.sb-text{overflow:hidden;white-space:nowrap}
+.sb-title{font-size:12px;font-weight:800;color:var(--tp);line-height:1.2}
+.sb-sub{font-size:9px;color:var(--tm);letter-spacing:.3px}
+.sb-sec{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--tm);padding:10px 8px 4px}
+.nav{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:7px;font-size:12px;font-weight:500;color:var(--ts);cursor:pointer;border:none;background:none;width:100%;text-align:left;transition:all .18s;white-space:nowrap;margin-bottom:2px}
+.nav:hover{background:var(--acs);color:var(--ac)}
+.nav.active{background:linear-gradient(135deg,var(--t6),var(--t4));color:#fff;font-weight:600}
+.nav.active i{color:#fff}
+.nav i{font-size:12px;width:14px;text-align:center;flex-shrink:0}
+.nav-label{overflow:hidden;white-space:nowrap}
+.bsoon{margin-left:auto;font-size:8px;padding:1px 5px;border-radius:4px;background:var(--bd);color:var(--tm);font-weight:600}
+.sb-foot{margin-top:auto;padding-top:10px;border-top:1px solid var(--bd);font-size:9px;color:var(--tm);text-align:center;white-space:nowrap;overflow:hidden}
+.col-btn{position:absolute;top:14px;right:-11px;width:22px;height:22px;border-radius:50%;background:var(--sf);border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ts);font-size:9px;z-index:20;box-shadow:var(--sh)}
+.col-btn:hover{background:var(--acs);color:var(--ac)}
+.main-w{flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden;min-height:0}
+.topbar{background:var(--sf);border-bottom:1px solid var(--bd);padding:8px 12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;flex-shrink:0}
+.page{display:none;flex:1;overflow:auto;padding:8px 10px;flex-direction:column;gap:8px;min-height:0;-webkit-overflow-scrolling:touch}
+.page.active{display:flex}
+.topbar-left{display:flex;align-items:center;gap:8px}
+.top-search{position:relative;display:flex;align-items:center;background:var(--sf2);border:1px solid var(--bd);border-radius:10px;overflow:hidden}
+.top-search i{width:28px;height:28px;display:flex;align-items:center;justify-content:center;color:var(--tm)}
+.top-search input{border:none;background:transparent;padding:5px 6px 5px 0;width:150px;color:var(--tp);font-size:11px;outline:none}
+.notif-btn{position:relative}
+.notif-btn .badge{position:absolute;top:-4px;right:-4px;width:16px;height:16px;border-radius:50%;background:#ef4444;color:white;font-size:10px;display:flex;align-items:center;justify-content:center}
+.tb-title{font-size:12px;font-weight:700;color:var(--tp);display:flex;align-items:center;gap:8px}
+.tb-sub{font-size:10px;color:var(--tm);margin-top:1px}
+.tb-right{display:flex;align-items:center;gap:6px}
+.bc{background:var(--acs);color:var(--ac);font-size:10px;font-weight:700;padding:3px 8px;border-radius:14px}
+.tbtn{width:28px;height:28px;border-radius:6px;border:1px solid var(--bd);background:var(--sf);color:var(--ts);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:11px;transition:all .2s}
+.tbtn:hover{background:var(--acs);color:var(--ac);border-color:var(--ac)}
+/* LANGUAGE DROPDOWN */
+.lang-select{background:var(--sf2);border:1px solid var(--bd);color:var(--ts);font-size:10px;font-weight:600;padding:3px 6px;border-radius:6px;cursor:pointer;outline:none;transition:all .18s}
+.lang-select:hover{border-color:var(--ac);color:var(--ac)}
+.pulse{width:6px;height:6px;border-radius:50%;background:var(--t4);display:inline-block;margin-right:4px;animation:pd 2s infinite}
+@keyframes pd{0%,100%{box-shadow:0 0 0 2px rgba(45,212,191,.25)}50%{box-shadow:0 0 0 4px rgba(45,212,191,.1)}}
+/* CARDS */
+.card{background:var(--sf);border:1px solid var(--bd);border-radius:10px;box-shadow:var(--sh);transition:background .3s,border-color .3s,box-shadow .2s;overflow:hidden}
+.card:hover{box-shadow:var(--shm)}
+.cb{padding:8px 10px;display:flex;flex-direction:column;gap:6px}
+.ct{font-size:10px;font-weight:700;color:var(--tp);display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.ct i{color:var(--tm);font-size:10px}
+/* UPLOAD */
+.dz{border:2px dashed var(--bds);border-radius:8px;padding:12px;text-align:center;cursor:pointer;transition:all .2s;background:var(--sf2)}
+.dz:hover,.dz.drag-over{border-color:var(--ac);background:var(--acs)}
+.dz-ico{width:36px;height:36px;background:linear-gradient(135deg,var(--t6),var(--t4));border-radius:9px;display:flex;align-items:center;justify-content:center;margin:0 auto 8px}
+.dz-ico i{color:white;font-size:13px}
+.dz-t{font-size:11px;font-weight:600;color:var(--tp);margin-bottom:2px}
+.dz-s{font-size:10px;color:var(--tm);margin-bottom:10px}
+.dz-row{display:flex;align-items:center;gap:8px;background:var(--sf);border:1px solid var(--bd);border-radius:6px;padding:5px 8px;max-width:380px;margin:0 auto}
+.dz-name{flex:1;font-size:10px;color:var(--ts);font-family:'DM Mono',monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.btn-br{background:var(--sf2);border:1px solid var(--bd);color:var(--ts);font-size:10px;font-weight:600;padding:3px 8px;border-radius:5px;cursor:pointer;transition:all .18s;white-space:nowrap}
+.btn-br:hover{border-color:var(--ac);color:var(--ac)}
+.btn-an{background:linear-gradient(135deg,var(--t6),var(--t4));color:white;border:none;font-size:11px;font-weight:700;padding:7px 18px;border-radius:8px;cursor:pointer;transition:all .2s;box-shadow:0 2px 8px rgba(13,148,136,.3);display:flex;align-items:center;gap:6px;margin:9px auto 0}
+.btn-an:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(13,148,136,.4)}
+.btn-warn{background:linear-gradient(135deg,#d97706,#f59e0b);color:white;border:none;font-size:11px;font-weight:700;padding:6px 14px;border-radius:8px;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:5px}
+.btn-warn:hover{transform:translateY(-1px)}
+.btn-danger{background:linear-gradient(135deg,#dc2626,#ef4444);color:white;border:none;font-size:11px;font-weight:700;padding:6px 14px;border-radius:8px;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:5px}
+input[type=file]{display:none}
+/* KPI */
+.kgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}
+.kpi{background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:8px 10px;box-shadow:var(--sh);transition:all .25s;min-height:56px}
+.kpi:hover{transform:translateY(-2px);box-shadow:var(--shm)}
+.kpi.clickable{cursor:pointer}
+.kpi.clickable:hover{border-color:var(--ac)}
+.kpi-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.kpi-l{font-size:9px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.5px}
+.kpi-i{width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px}
+.kpi-n{font-size:22px;font-weight:800;line-height:1;letter-spacing:-1px}
+.kpi-d{font-size:9px;color:var(--tm);margin-top:2px}
+.k1 .kpi-i{background:var(--k1b);color:var(--k1)}.k1 .kpi-n{color:var(--k1)}
+.k2 .kpi-i{background:var(--k2b);color:var(--k2)}.k2 .kpi-n{color:var(--k2)}
+.k3 .kpi-i{background:var(--k3b);color:var(--k3)}.k3 .kpi-n{color:var(--k3)}
+.k4 .kpi-i{background:var(--k4b);color:var(--k4)}.k4 .kpi-n{color:var(--k4)}
+.k5 .kpi-i{background:var(--k5b);color:var(--k5)}.k5 .kpi-n{color:var(--k5)}
+/* DATA QUALITY KPI STRIP */
+.dq-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-bottom:8px}
+.dq-card{background:var(--sf);border:1px solid var(--bd);border-radius:9px;padding:8px 10px;display:flex;flex-direction:column;gap:2px;transition:all .2s}
+.dq-card.warn{border-color:#d97706;background:#fffbeb}
+[data-theme="dark"] .dq-card.warn{background:#292524}
+.dq-card.danger{border-color:#dc2626;background:#fef2f2}
+[data-theme="dark"] .dq-card.danger{background:#450a0a}
+.dq-card.ok{border-color:#16a34a;background:#f0fdf4}
+[data-theme="dark"] .dq-card.ok{background:#052e16}
+.dq-card.clickable{cursor:pointer}
+.dq-card.clickable:hover{transform:translateY(-2px);box-shadow:var(--shm)}
+.dq-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--tm)}
+.dq-val{font-size:20px;font-weight:800;letter-spacing:-.5px}
+.dq-sub{font-size:9px;color:var(--tm)}
+/* ANALYTICS / CHART GRID */
+.analytics-section{background:var(--sf);border:1px solid var(--bd);border-radius:10px;box-shadow:var(--sh);overflow:hidden;margin-bottom:0}
+.analytics-section-head{padding:8px 12px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:6px;background:var(--sf2)}
+.analytics-section-title{font-size:11px;font-weight:700;color:var(--tp)}
+.analytics-section-badge{font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px;background:var(--acs);color:var(--ac)}
+.analytics-charts-grid{display:grid;gap:8px;padding:10px}
+.chart-card{background:var(--sf2);border:1px solid var(--bd);border-radius:10px;box-shadow:var(--sh);display:flex;flex-direction:column;overflow:hidden;transition:transform .18s,box-shadow .18s;cursor:pointer}
+.chart-card:hover{transform:translateY(-2px);box-shadow:var(--shm);border-color:var(--ac)}
+.chart-card-head{padding:5px 8px;font-size:9px;font-weight:700;color:var(--ts);border-bottom:1px solid var(--bd);background:var(--sf);line-height:1.3;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;justify-content:space-between;gap:4px}
+.card-title-text{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0}
+.chart-card-type{font-size:8px;font-weight:600;color:var(--ac);background:var(--acs);padding:1px 5px;border-radius:4px;margin-left:4px}
+.chart-card-body{flex:1;display:flex;align-items:center;justify-content:center;padding:4px;min-height:0}
+.chart-card-body>div{width:100%;height:100%}
+/* DATA PREVIEW TABLE (paginated) */
+.prev-wrap{overflow:auto;max-height:260px;border-radius:7px;border:1px solid var(--bd)}
+.tbl{width:100%;border-collapse:collapse;font-size:10px}
+.tbl thead th{background:var(--bg);color:var(--tm);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:4px 6px;border-bottom:2px solid var(--bd);white-space:nowrap;position:sticky;top:0;z-index:2}
+.tbl tbody td{padding:3px 6px;border-bottom:1px solid var(--bd);color:var(--tp);font-family:'DM Mono',monospace;font-size:10px;white-space:nowrap}
+.tbl tbody tr:last-child td{border-bottom:none}
+.tbl tbody tr:hover td{background:var(--acs)}
+.tbl tbody td.ml{font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;color:var(--tp)}
+.tbl tbody tr.rw td{background:#fff8e1}
+[data-theme="dark"] .tbl tbody tr.rw td{background:#292524}
+.tbl tbody td.missing{color:#dc2626;font-style:italic}
+/* Pagination */
+.pag{display:flex;align-items:center;gap:6px;padding:6px 0 0}
+.pag-btn{width:26px;height:26px;border-radius:6px;border:1px solid var(--bd);background:var(--sf2);color:var(--ts);cursor:pointer;font-size:10px;display:flex;align-items:center;justify-content:center;transition:all .18s}
+.pag-btn:hover:not(:disabled){background:var(--acs);color:var(--ac);border-color:var(--ac)}
+.pag-btn:disabled{opacity:.4;cursor:not-allowed}
+.pag-info{font-size:10px;color:var(--tm);min-width:80px;text-align:center}
+/* CLEANING PANEL */
+.clean-panel{background:var(--sf);border:1px solid #d97706;border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:10px}
+.clean-panel-title{font-size:11px;font-weight:700;color:#d97706;display:flex;align-items:center;gap:6px}
+.clean-ops{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:6px}
+.clean-op{display:flex;align-items:flex-start;gap:7px;background:var(--sf2);border:1px solid var(--bd);border-radius:7px;padding:7px 9px;cursor:pointer;transition:all .18s}
+.clean-op:hover{border-color:var(--ac);background:var(--acs)}
+.clean-op input{margin-top:2px;accent-color:var(--ac)}
+.clean-op-label{font-size:11px;font-weight:600;color:var(--tp)}
+.clean-op-desc{font-size:9px;color:var(--tm);margin-top:1px}
+.clean-log{background:var(--bg);border:1px solid var(--bd);border-radius:7px;padding:8px 10px;font-size:10px;font-family:'DM Mono',monospace;color:var(--ts);max-height:120px;overflow:auto;display:flex;flex-direction:column;gap:3px}
+/* Column scope chips */
+.col-chip{display:inline-flex;align-items:center;gap:4px;background:var(--sf);border:1.5px solid var(--bd);border-radius:14px;padding:3px 10px;font-size:10px;font-weight:600;color:var(--ts);cursor:pointer;transition:all .15s;user-select:none}
+.col-chip:hover{border-color:var(--ac);color:var(--ac)}
+.col-chip.active{background:var(--ac);border-color:var(--ac);color:white}
+.col-chip i{font-size:8px}
+/* VIZ CONFIG (poin 5) */
+.viz-config-bar{background:var(--sf);border:1px solid var(--bd);border-radius:8px;padding:8px 12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:4px}
+.viz-config-label{font-size:10px;font-weight:700;color:var(--ts);white-space:nowrap}
+.viz-select{background:var(--sf2);border:1px solid var(--bd);color:var(--ts);font-size:10px;padding:3px 6px;border-radius:6px;cursor:pointer;outline:none}
+.viz-select:focus{border-color:var(--ac)}
+.color-swatch{width:22px;height:22px;border-radius:5px;border:2px solid var(--bd);cursor:pointer;display:inline-block;transition:transform .15s}
+.color-swatch:hover{transform:scale(1.15)}
+.color-swatch.active{border-color:var(--ac);box-shadow:0 0 0 2px var(--acs)}
+.color-custom{width:28px;height:28px;border-radius:6px;border:1px solid var(--bd);cursor:pointer;padding:0;overflow:hidden}
+/* TABLE UTILS */
+.tw{border-radius:7px;border:1px solid var(--bd);overflow:auto;font-size:10px}
+.two-col{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px;align-items:stretch}
+.ins-c{font-size:10px;color:var(--ts);line-height:1.5;display:flex;flex-direction:column;gap:4px;overflow:auto;max-height:160px}
+/* ALERTS */
+.al{padding:7px 10px;border-radius:7px;font-size:10px;display:flex;align-items:center;gap:6px}
+.al-l{background:#e0f7fb;color:#0e7490;border:1px solid #a5f3fc}
+.al-ok{background:#dcfce7;color:#15803d;border:1px solid #86efac}
+.al-er{background:#fee2e2;color:#b91c1c;border:1px solid #fca5a5}
+.al-w{background:#fff8e1;color:#92400e;border:1px solid #fde68a}
+[data-theme="dark"] .al-l{background:#083344;color:#22d3ee;border-color:#155e75}
+[data-theme="dark"] .al-ok{background:#052e16;color:#4ade80;border-color:#166534}
+[data-theme="dark"] .al-er{background:#450a0a;color:#f87171;border-color:#7f1d1d}
+[data-theme="dark"] .al-w{background:#292524;color:#fbbf24;border-color:#78350f}
+.spin{width:13px;height:13px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:sp .7s linear infinite;flex-shrink:0}
+@keyframes sp{to{transform:rotate(360deg)}}
+/* VIZ PAGE */
+.vtabs{display:flex;gap:4px;background:var(--sf);border:1px solid var(--bd);border-radius:8px;padding:3px;flex-wrap:wrap}
+.vtab{padding:5px 12px;border-radius:6px;font-size:11px;font-weight:600;color:var(--ts);cursor:pointer;border:none;background:none;transition:all .18s;white-space:nowrap}
+.vtab:hover{background:var(--acs);color:var(--ac)}
+.vtab.active{background:linear-gradient(135deg,var(--t6),var(--t4));color:white}
+.vgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.vc{background:var(--sf);border:1px solid var(--bd);border-radius:10px;overflow:hidden;box-shadow:var(--sh);cursor:pointer;transition:all .22s;width:100%}
+.vc:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.12);border-color:var(--ac)}
+.vc-head{padding:8px 10px;border-bottom:1px solid var(--bd);background:var(--sf2);display:flex;align-items:center;justify-content:space-between}
+.vc-title{font-size:11px;font-weight:700;color:var(--tp)}
+.vc-badge{font-size:9px;font-weight:600;padding:2px 7px;border-radius:6px;background:var(--acs);color:var(--ac)}
+.vc-body{padding:8px;display:flex;align-items:center;justify-content:center;min-height:300px}
+.vc-body>div{width:100%;height:100%}
+.viz-section-label{font-size:11px;font-weight:800;color:var(--tp);padding:8px 0 4px;border-bottom:1px solid var(--bd);margin-bottom:8px;display:flex;align-items:center;gap:7px;grid-column:1/-1}
+.viz-section-label i{color:var(--ac);font-size:11px}
+/* MODAL */
+.modal{display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:16px}
+.modal.open{display:flex}
+.modal-inner{background:var(--sf);border-radius:12px;max-width:860px;width:100%;max-height:90vh;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.4);display:flex;flex-direction:column}
+.modal-h{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--bd)}
+.modal-title{font-size:13px;font-weight:700;color:var(--tp)}
+.modal-x{width:26px;height:26px;border-radius:6px;border:1px solid var(--bd);background:none;color:var(--ts);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;transition:all .2s}
+.modal-x:hover{background:var(--acs);color:var(--ac);border-color:var(--ac)}
+.modal-b{padding:14px;overflow-y:auto}
+.modal-b img{max-width:100%;border-radius:8px;max-height:60vh;display:block;margin:0 auto}
+.modal-nav{display:flex;align-items:center;justify-content:center;gap:8px;padding:9px 16px;border-top:1px solid var(--bd)}
+.marr{padding:5px 12px;border-radius:6px;border:1px solid var(--bd);background:var(--sf2);color:var(--ts);cursor:pointer;font-size:11px;font-weight:600;transition:all .18s}
+.marr:hover{background:var(--acs);color:var(--ac);border-color:var(--ac)}
+.mctr{font-size:11px;color:var(--tm);min-width:55px;text-align:center}
+/* M16 */
+.m16ph{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:260px;gap:10px;text-align:center}
+.m16-ico{width:56px;height:56px;border-radius:14px;background:linear-gradient(135deg,var(--t6),var(--t4));display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(13,148,136,.3)}
+.m16-ico i{color:white;font-size:22px}
+.m16-title{font-size:15px;font-weight:700;color:var(--tp)}
+.m16-sub{font-size:12px;color:var(--tm);max-width:340px;line-height:1.6}
+.m16-badge{background:var(--k4b);color:var(--k4);font-size:10px;font-weight:700;padding:2px 9px;border-radius:10px}
+.exp-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:8px}
+.exp-card{background:var(--sf);border:1px solid var(--bd);border-radius:9px;padding:14px;text-align:center;cursor:pointer;transition:all .22s;box-shadow:var(--sh)}
+.exp-card:hover{transform:translateY(-2px);box-shadow:var(--shm);border-color:var(--ac)}
+.exp-card i{font-size:22px;margin-bottom:7px;display:block}
+.exp-card span{font-size:11px;font-weight:700;color:var(--tp);display:block}
+.exp-card small{font-size:10px;color:var(--tm)}
+.nodata{text-align:center;padding:36px;color:var(--tm)}
+.nodata i{font-size:28px;opacity:.35;display:block;margin-bottom:9px}
+.nodata p{font-size:12px}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--bds);border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:var(--ac)}
+
+/* ── AUTH SCREEN ── */
+#scAuth{background:linear-gradient(135deg,#042f2e 0%,#115e59 50%,#0d9488 100%);flex-direction:column;align-items:center;justify-content:center;padding:20px;position:relative;overflow:hidden}
+#scAuth::before{content:'';position:absolute;top:-80px;right:-80px;width:280px;height:280px;border-radius:50%;background:rgba(255,255,255,.04)}
+.auth-box{background:white;border-radius:20px;padding:32px 36px;width:100%;max-width:420px;box-shadow:0 24px 64px rgba(0,0,0,.35);z-index:1}
+.auth-logo{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:22px}
+.auth-logo-ico{width:40px;height:40px;background:linear-gradient(135deg,#0d9488,#2dd4bf);border-radius:10px;display:flex;align-items:center;justify-content:center}
+.auth-logo-ico i{color:white;font-size:16px}
+.auth-logo-txt{font-size:14px;font-weight:900;color:#0f172a;letter-spacing:-.3px}
+.auth-logo-sub{font-size:10px;color:#94a3b8}
+.auth-tabs{display:flex;background:#f1f5f4;border-radius:10px;padding:3px;margin-bottom:22px;gap:3px}
+.auth-tab{flex:1;padding:7px;border-radius:8px;border:none;background:none;font-size:12px;font-weight:700;color:#64748b;cursor:pointer;transition:all .18s}
+.auth-tab.active{background:white;color:#0d9488;box-shadow:0 1px 4px rgba(0,0,0,.1)}
+.auth-form{display:flex;flex-direction:column;gap:13px}
+.auth-field label{display:block;font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
+.auth-field input{width:100%;border:1.5px solid #e2e8f0;border-radius:8px;padding:10px 12px;font-size:13px;color:#0f172a;outline:none;transition:border-color .18s;font-family:inherit;box-sizing:border-box}
+.auth-field input:focus{border-color:#0d9488;box-shadow:0 0 0 3px rgba(13,148,136,.1)}
+.auth-msg{border-radius:8px;padding:8px 12px;font-size:11px;margin-top:2px;display:none}
+.auth-msg.err{background:#fee2e2;border:1px solid #fca5a5;color:#b91c1c;display:block}
+.auth-msg.ok{background:#dcfce7;border:1px solid #86efac;color:#15803d;display:block}
+.btn-auth{background:linear-gradient(135deg,#0d9488,#2dd4bf);color:white;border:none;padding:12px;border-radius:10px;font-size:13px;font-weight:800;cursor:pointer;transition:all .2s;box-shadow:0 3px 10px rgba(13,148,136,.3);width:100%}
+.btn-auth:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(13,148,136,.4)}
+.btn-auth:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.auth-footer-txt{text-align:center;margin-top:14px;font-size:11px;color:#94a3b8}
+/* user badge topbar */
+.user-badge{display:flex;align-items:center;gap:6px;background:var(--acs);border:1px solid var(--ac);border-radius:20px;padding:3px 10px 3px 5px;font-size:11px;font-weight:600;color:var(--ac);cursor:pointer;transition:all .18s}
+.user-badge:hover{background:var(--ac);color:white}
+.user-avatar{width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,var(--t6),var(--t4));display:flex;align-items:center;justify-content:center;font-size:9px;color:white;font-weight:800}
+/* adaptive viz badges */
+.type-badge{font-size:8px;font-weight:700;padding:2px 5px;border-radius:4px;margin-left:3px;vertical-align:middle}
+.tb-continuous{background:#e0f7fb;color:#0e7490}
+.tb-discrete{background:#f3eeff;color:#7c3aed}
+.tb-binary{background:#fff8e1;color:#d97706}
+.tb-low{background:#dcfce7;color:#15803d}
+.tb-medium{background:#e0f7fb;color:#0e7490}
+.tb-high{background:#fee2e2;color:#b91c1c}
+</style>
+</head>
+<body>
+
+<!-- ============================================================  AUTH -->
+<div class="screen" id="scAuth">
+  <div class="auth-box">
+    <div class="auth-logo">
+      <div class="auth-logo-ico"><i class="fa-solid fa-chart-column"></i></div>
+      <div>
+        <div class="auth-logo-txt">Analytics Dashboard</div>
+        <div class="auth-logo-sub">SD-1306 · Kelompok 6 · ITSB</div>
+      </div>
+    </div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tabLogin" onclick="authSwitch('login')">🔑 Masuk</button>
+      <button class="auth-tab" id="tabReg"   onclick="authSwitch('reg')">📝 Daftar</button>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <div id="formLogin">
+      <div class="auth-form">
+        <div class="auth-field">
+          <label>Email</label>
+          <input type="email" id="loginEmail" placeholder="email@contoh.com" autocomplete="email">
+        </div>
+        <div class="auth-field">
+          <label>Sandi</label>
+          <input type="password" id="loginPw" placeholder="••••••" autocomplete="current-password">
+        </div>
+        <div id="loginMsg" class="auth-msg"></div>
+        <button class="btn-auth" id="btnLogin" onclick="doLogin()"><i class="fa-solid fa-right-to-bracket"></i> Masuk</button>
+      </div>
+      <div class="auth-footer-txt">Belum punya akun? <a href="#" onclick="authSwitch('reg')" style="color:#0d9488;font-weight:700">Daftar di sini</a></div>
+    </div>
+
+    <!-- REGISTER FORM -->
+    <div id="formReg" style="display:none">
+      <div class="auth-form">
+        <div class="auth-field">
+          <label>Nama Lengkap</label>
+          <input type="text" id="regName" placeholder="Nama Anda" autocomplete="name">
+        </div>
+        <div class="auth-field">
+          <label>Email</label>
+          <input type="email" id="regEmail" placeholder="email@contoh.com" autocomplete="email">
+        </div>
+        <div class="auth-field">
+          <label>Sandi <span style="font-size:9px;color:#94a3b8;font-weight:400">(minimal 6 karakter)</span></label>
+          <input type="password" id="regPw" placeholder="••••••" autocomplete="new-password">
+        </div>
+        <div id="regMsg" class="auth-msg"></div>
+        <button class="btn-auth" id="btnReg" onclick="doRegister()"><i class="fa-solid fa-user-plus"></i> Buat Akun</button>
+      </div>
+      <div class="auth-footer-txt">Sudah punya akun? <a href="#" onclick="authSwitch('login')" style="color:#0d9488;font-weight:700">Masuk di sini</a></div>
+    </div>
+    <div style="text-align:center;margin-top:14px">
+      <a href="#" onclick="show('scLanding')" style="font-size:11px;color:rgba(255,255,255,.7);text-decoration:none">← Kembali ke halaman utama</a>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================  LANDING -->
+<div class="screen active" id="scLanding">
+  <div class="lw">
+    <div class="lw-badge"><i class="fa-solid fa-star" style="font-size:9px;color:#fbbf24"></i> <span data-i18n="welcome">Selamat Datang</span></div>
+    <div class="lw-title">Analytics Dashboard</div>
+    <div class="lw-sub">Auto EDA Analytics · Intelligent Data Exploration Platform</div>
+    <div class="lw-pills">
+      <span class="pill">Kelompok 6</span><span class="pill">Kelas B</span>
+      <span class="pill">SD-1306 Analytics Dashboard</span><span class="pill">Final Project 2026</span>
+    </div>
+  </div>
+  <div class="logos-row">
+    <div class="itsb-box"><div class="itsb-txt"><span class="it">IT</span><span class="s">S</span><span class="b2">B</span></div></div>
+  </div>
+  <div class="lw-sub" style="margin-top:-4px;font-size:12px;color:rgba(255,255,255,.85);font-weight:600;z-index:1">
+    <span data-i18n="lecturer_label">Lecturer</span> : Bakti Siregar, M.Sc.
+  </div>
+  <div class="mgrid">
+    <div class="mc"><div class="mbadge"><span data-i18n="member">Anggota</span></div><img src="https://github.com/norravembr/profil/blob/main/aurora.png?raw=true" alt="Aurora" class="mav" style="width:120px;height:120px;object-fit:cover;border:3px solid rgba(255,255,255,0.7)"><div class="mname">Ni Md Aurora Sekarningrum</div><div class="mrole">Frontend & UI/UX<br>Data Management</div><div class="mfile">index.html · data_loader.py</div><div style="margin-top:10px;display:flex;gap:10px;justify-content:center"><a href="https://github.com/norravembr" target="_blank" style="color:white;font-size:15px"><i class="fa-brands fa-github"></i></a><a href="https://www.linkedin.com/in/ni-md-aurora-sekarningrum-2a332238a" target="_blank" style="color:white;font-size:15px"><i class="fa-brands fa-linkedin"></i></a></div></div>
+    <div class="mc"><div class="mbadge"><span data-i18n="member">Anggota</span></div><img src="https://github.com/adindamaiza458/profil/blob/main/Picsart_25-12-07_10-26-08-367-removebg-preview.jpg?raw=true" alt="Adinda" class="mav" style="width:120px;height:120px;object-fit:cover;border:3px solid rgba(255,255,255,0.7)"><div class="mname">Adinda Maiza Ishfahani</div><div class="mrole">Categorical Analysis<br>Visualization M15</div><div class="mfile">categorical_analysis.py</div><div style="margin-top:10px;display:flex;gap:10px;justify-content:center"><a href="https://github.com/adindamaiza458" target="_blank" style="color:white;font-size:15px"><i class="fa-brands fa-github"></i></a><a href="https://www.linkedin.com/in/adinda-maiza-ishfahani-06061338a" target="_blank" style="color:white;font-size:15px"><i class="fa-brands fa-linkedin"></i></a></div></div>
+    <div class="mc ketua"><div class="mbadge">⭐ <span data-i18n="chair">Ketua</span></div><img src="https://github.com/rabiblolong/formal1/blob/main/profil-removebg-preview.png?raw=true" alt="Ignasius" class="mav" style="width:120px;height:120px;object-fit:cover;border:3px solid #fbbf24"><div class="mname">Ignasius Rabi Blolong</div><div class="mrole">Backend · Flask<br>Numerical Statistics</div><div class="mfile">app.py · descriptive_stats.py</div><div style="margin-top:10px;display:flex;gap:10px;justify-content:center"><a href="https://github.com/rabiblolong" target="_blank" style="color:white;font-size:15px"><i class="fa-brands fa-github"></i></a><a href="https://www.linkedin.com/in/ignasius-rabi-blolong-05269238a/" target="_blank" style="color:white;font-size:15px"><i class="fa-brands fa-linkedin"></i></a></div></div>
+    <div class="mc"><div class="mbadge"><span data-i18n="member">Anggota</span></div><img src="https://github.com/chricyesiauvas-sudo/Profil/blob/14ed3882abaf6973d426ca976b118fb87961a1a1/99040255ec8a880f2b77e4b3bac4968f_0.jpeg?raw=true" alt="Chricyesia" class="mav" style="width:120px;height:120px;object-fit:cover;border:3px solid rgba(255,255,255,0.7)"><div class="mname">Chricyesia W. F. Uvas</div><div class="mrole">Statistics Engine<br>UI Components</div><div class="mfile">descriptive_stats.py</div><div style="margin-top:10px;display:flex;gap:10px;justify-content:center"><a href="https://github.com/chricyesiauvas-sudo" target="_blank" style="color:white;font-size:15px"><i class="fa-brands fa-github"></i></a><a href="https://www.linkedin.com/in/chricyesia-uvas-ab344838a" target="_blank" style="color:white;font-size:15px"><i class="fa-brands fa-linkedin"></i></a></div></div>
+    <div class="mc"><div class="mbadge"><span data-i18n="member">Anggota</span></div><img src="https://raw.githubusercontent.com/januariateresinha619-create/profil/main/ChatGPT%20Image%2017%20Mei%202026%2C%2015.16.04.png" alt="Januaria" class="mav" style="width:120px;height:120px;object-fit:cover;border:3px solid rgba(255,255,255,0.7)"><div class="mname">Januaria Teresinha</div><div class="mrole">Setup & Docs<br>Time Series · Export</div><div class="mfile">time_series.py · README</div><div style="margin-top:10px;display:flex;gap:10px;justify-content:center"><a href="https://github.com/januariateresinha619-create" target="_blank" style="color:white;font-size:15px"><i class="fa-brands fa-github"></i></a><a href="https://www.linkedin.com/in/januaria-teresinha-a17157415" target="_blank" style="color:white;font-size:15px"><i class="fa-brands fa-linkedin"></i></a></div></div>
+  </div>
+  <button class="btn-enter" onclick="onMulaiAnalisis()"><i class="fa-solid fa-bolt"></i> <span data-i18n="start_analysis">Mulai Analisis</span></button>
+</div>
+
+<!-- ============================================================  APP -->
+<div class="screen" id="scApp">
+  <nav class="sidebar" id="SB">
+    <button class="col-btn" id="colBtn" onclick="toggleSB()"><i class="fa-solid fa-chevron-left" id="colIco"></i></button>
+    <div class="sb-logo"><div class="sb-ico"><i class="fa-solid fa-chart-column"></i></div><div class="sb-text"><div class="sb-title">Analytics Dashboard</div><div class="sb-sub">SD-1306 · Final Project 2026</div></div></div>
+    <div class="sb-sec" data-i18n="main_menu">Menu Utama</div>
+    <button class="nav active" id="n-dash"   onclick="go('dash')"  ><i class="fa-solid fa-chart-pie"></i>   <span class="nav-label" data-i18n="nav_dashboard">Dashboard</span></button>
+    <button class="nav"        id="n-upload" onclick="go('upload')"><i class="fa-solid fa-folder-open"></i>  <span class="nav-label" data-i18n="nav_upload">Unggah Data</span></button>
+    <button class="nav"        id="n-prev"   onclick="go('prev')"  ><i class="fa-solid fa-table"></i>        <span class="nav-label" data-i18n="nav_preview">Pratinjau Data</span></button>
+    <button class="nav"        id="n-clean"  onclick="go('clean')" ><i class="fa-solid fa-broom"></i>        <span class="nav-label" data-i18n="nav_clean">Pembersihan Data</span></button>
+    <button class="nav"        id="n-stats"  onclick="go('stats')" ><i class="fa-solid fa-calculator"></i>   <span class="nav-label" data-i18n="nav_stats">Statistik Deskriptif</span></button>
+    <button class="nav"        id="n-viz"    onclick="go('viz')"   ><i class="fa-solid fa-chart-bar"></i>    <span class="nav-label" data-i18n="nav_viz">Visualisasi</span></button>
+    <button class="nav" id="n-ts"      onclick="go('ts')"     ><i class="fa-solid fa-wave-square"></i>      <span class="nav-label" data-i18n="nav_ts">Time Series</span></button>
+    <button class="nav" id="n-insight" onclick="go('insight')"><i class="fa-solid fa-lightbulb"></i>          <span class="nav-label" data-i18n="nav_insight">Smart Insight</span></button>
+    <button class="nav" id="n-exp"     onclick="go('exp')"    ><i class="fa-solid fa-file-export"></i>        <span class="nav-label" data-i18n="nav_export">Export Laporan</span></button>
+    <div class="sb-foot">© 2026 Kelompok 6<br>Kelas B · ITSB</div>
+  </nav>
+
+  <div class="main-w">
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="tbtn" id="undoBtn"><i class="fa-solid fa-rotate-left"></i></button>
+        <div class="top-search"><i class="fa-solid fa-magnifying-glass"></i><input id="pageSearch" type="text" placeholder="Cari..." autocomplete="off"></div>
+        <button class="tbtn notif-btn" id="notifBtn"><i class="fa-solid fa-bell"></i><span class="badge">3</span></button>
+      </div>
+      <div><div class="tb-title" id="topT"><span class="pulse"></span><span data-i18n="nav_dashboard">Dashboard</span></div><div class="tb-sub" id="topS" data-i18n="sub_dashboard">Ringkasan dataset dan analisis otomatis</div></div>
+      <div class="tb-right">
+        <span class="bc">SD-1306 · Kel.6</span>
+        <div class="user-badge" id="userBadge" onclick="doLogout()" title="Klik untuk logout">
+          <div class="user-avatar" id="userAvatar">?</div>
+          <span id="userName">User</span>
+        </div>
+        <select class="lang-select" id="langSelect" title="Language / Bahasa">
+          <option value="id">🇮🇩 ID</option>
+          <option value="en">🇬🇧 EN</option>
+        </select>
+        <button class="tbtn" id="thBtn"><i class="fa-solid fa-moon" id="thIco"></i></button>
+      </div>
+    </div>
+
+    <!-- ===== DASHBOARD ===== -->
+    <div class="page active" id="pgDash">
+      <div id="dsEmpty" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:12px;text-align:center">
+        <div style="width:56px;height:56px;border-radius:14px;background:linear-gradient(135deg,var(--t6),var(--t4));display:flex;align-items:center;justify-content:center"><i class="fa-solid fa-database" style="color:white;font-size:22px"></i></div>
+        <div style="font-size:15px;font-weight:700;color:var(--tp)" data-i18n="no_dataset">Belum Ada Dataset</div>
+        <div style="font-size:12px;color:var(--tm);max-width:300px;line-height:1.6" data-i18n="upload_first">Upload file terlebih dahulu untuk memulai analisis data otomatis.</div>
+        <button class="btn-an" onclick="go('upload')" style="margin:0"><i class="fa-solid fa-folder-open"></i> <span data-i18n="nav_upload">Unggah Dataset</span></button>
+      </div>
+      <div id="dsCt" style="display:none;flex-direction:column;gap:8px">
+        <!-- KPI -->
+        <div class="kgrid" style="flex-shrink:0">
+          <div class="kpi k1"><div class="kpi-top"><span class="kpi-l" data-i18n="kpi_rows">Total Baris</span><div class="kpi-i"><i class="fa-solid fa-list"></i></div></div><div class="kpi-n" id="mR">-</div><div class="kpi-d" data-i18n="kpi_records">Rekaman data</div></div>
+          <div class="kpi k2"><div class="kpi-top"><span class="kpi-l" data-i18n="kpi_cols">Total Kolom</span><div class="kpi-i"><i class="fa-solid fa-table-columns"></i></div></div><div class="kpi-n" id="mC">-</div><div class="kpi-d" data-i18n="kpi_variables">Variabel terdeteksi</div></div>
+          <div class="kpi k3"><div class="kpi-top"><span class="kpi-l" data-i18n="kpi_numeric">Var. Numerik</span><div class="kpi-i"><i class="fa-solid fa-hashtag"></i></div></div><div class="kpi-n" id="mN">-</div><div class="kpi-d" data-i18n="kpi_num_cols">Kolom angka</div></div>
+          <div class="kpi k4"><div class="kpi-top"><span class="kpi-l" data-i18n="kpi_categorical">Var. Kategorikal</span><div class="kpi-i"><i class="fa-solid fa-font"></i></div></div><div class="kpi-n" id="mK">-</div><div class="kpi-d" data-i18n="kpi_cat_cols">Kolom teks</div></div>
+        </div>
+        <!-- Charts -->
+        <div id="dash-viz-sections" style="display:flex;flex-direction:column;gap:8px"></div>
+        <!-- Preview + Insights -->
+        <div class="two-col">
+          <div class="card"><div class="cb" style="padding:10px 14px"><div class="ct" style="margin-bottom:7px"><i class="fa-solid fa-eye"></i> <span data-i18n="preview_title">Pratinjau Dataset</span> <span style="margin-left:auto;font-size:10px;color:var(--tm)" data-i18n="first_5_rows">5 baris pertama</span></div><div class="tw" id="prevT"></div></div></div>
+          <div class="card"><div class="cb" style="padding:10px 14px"><div class="ct" style="margin-bottom:7px"><i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="auto_insight">Wawasan Otomatis dari Data</span></div><div class="ins-c" id="insC"><span data-i18n="loading_insight">Memuat wawasan...</span></div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== UPLOAD ===== -->
+    <div class="page" id="pgUpload">
+      <div id="upSt"></div>
+      <div class="card"><div class="cb">
+        <div class="ct"><i class="fa-solid fa-cloud-arrow-up"></i> <span data-i18n="upload_title">Unggah Sumber Dataset</span> <span style="margin-left:auto;font-size:10px;color:var(--tm)">CSV · Excel · TXT · TSV · JSON</span></div>
+        <div class="dz" id="dz" onclick="document.getElementById('fi').click()">
+          <div class="dz-ico"><i class="fa-solid fa-file-csv"></i></div>
+          <div class="dz-t" data-i18n="dz_title">Seret &amp; Lepas File di Sini</div>
+          <div class="dz-s" data-i18n="dz_sub">atau klik untuk memilih file dari komputer Anda</div>
+          <div class="dz-row" onclick="event.stopPropagation()">
+            <span class="dz-name" id="dzN" data-i18n="no_file">Belum ada file dipilih...</span>
+            <button type="button" class="btn-br" onclick="document.getElementById('fi').click()"><i class="fa-solid fa-folder-open"></i> <span data-i18n="choose_file">Pilih File</span></button>
+          </div>
+        </div>
+        <input type="file" id="fi" accept=".csv,.xlsx,.xls,.txt,.tsv,.json">
+        <div style="text-align:center"><button type="button" class="btn-an" id="btnUpload" onclick="doUpload()"><i class="fa-solid fa-bolt"></i> <span data-i18n="start_btn">Mulai Analisis Data</span></button></div>
+      </div></div>
+    </div>
+
+    <!-- ===== POIN 1: DATA PREVIEW PAGE ===== -->
+    <div class="page" id="pgPrev">
+      <div id="pvEmpty" class="nodata"><i class="fa-solid fa-table"></i><p data-i18n="upload_first_short">Upload file terlebih dahulu.</p></div>
+      <div id="pvCt" style="display:none;flex-direction:column;gap:8px">
+
+        <!-- POIN 2: Data Quality KPI Strip -->
+        <div class="card"><div class="cb" style="padding:10px 14px">
+          <div class="ct" style="margin-bottom:8px"><i class="fa-solid fa-shield-halved"></i> <span data-i18n="data_quality">Kualitas Data</span>
+            <span style="margin-left:auto;font-size:9px;color:var(--tm)" data-i18n="click_to_clean">Klik kartu bermasalah untuk pembersihan</span>
+          </div>
+          <div class="dq-strip" id="dqStrip">
+            <!-- Filled by JS -->
+          </div>
+        </div></div>
+
+        <!-- Data Preview Table -->
+        <div class="card"><div class="cb" style="padding:10px 14px">
+          <div class="ct" style="margin-bottom:8px">
+            <i class="fa-solid fa-table"></i> <span data-i18n="preview_title">Pratinjau Dataset</span>
+            <span id="pvFilename" style="margin-left:6px;font-size:10px;color:var(--ac);font-weight:600;font-family:'DM Mono',monospace"></span>
+            <span style="margin-left:auto;font-size:10px;color:var(--tm)" id="pvRowInfo"></span>
+          </div>
+          <div class="prev-wrap" id="pvTable">
+            <!-- Filled by JS — no scroll, 10 rows fixed -->
+          </div>
+          <!-- Pagination bottom-right -->
+          <div style="display:flex;justify-content:flex-end">
+            <div class="pag" id="pvPag">
+              <button class="pag-btn" id="pvPrev" onclick="pvChangePage(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+              <span class="pag-info" id="pvPagInfo">1 / 1</span>
+              <button class="pag-btn" id="pvNext" onclick="pvChangePage(1)"><i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+          </div>
+        </div></div>
+      </div>
+    </div>
+
+    <!-- ===== POIN 2+3: DATA CLEANING PAGE ===== -->
+    <div class="page" id="pgClean">
+      <div id="clEmpty" class="nodata"><i class="fa-solid fa-broom"></i><p data-i18n="upload_first_short">Upload file terlebih dahulu.</p></div>
+      <div id="clCt" style="display:none;flex-direction:column;gap:10px">
+
+        <!-- Quality Summary -->
+        <div class="card"><div class="cb" style="padding:10px 14px">
+          <div class="ct"><i class="fa-solid fa-magnifying-glass-chart"></i> <span data-i18n="quality_summary">Ringkasan Kualitas Data</span></div>
+          <div class="dq-strip" id="clDqStrip"></div>
+          <div id="clQualStatus" style="margin-top:6px"></div>
+        </div></div>
+
+        <!-- Issue Preview: Missing & Outlier rows -->
+        <div class="card" id="clIssueCard" style="display:none"><div class="cb" style="padding:10px 14px">
+          <div class="ct" style="margin-bottom:6px">
+            <i class="fa-solid fa-triangle-exclamation" style="color:#d97706"></i>
+            <span data-i18n="issue_preview_title">Pratinjau Baris Bermasalah</span>
+          </div>
+          <div class="vtabs" id="issueTabs" style="margin-bottom:8px">
+            <button class="vtab active" id="issueTabMissing" onclick="issueTab('missing')">
+              <i class="fa-solid fa-circle-question"></i> <span data-i18n="tab_missing">Missing Value</span> (<span id="issueMissingCount">0</span>)
+            </button>
+            <button class="vtab" id="issueTabOutlier" onclick="issueTab('outlier')">
+              <i class="fa-solid fa-chart-line"></i> <span data-i18n="tab_outlier">Outlier</span> (<span id="issueOutlierCount">0</span>)
+            </button>
+          </div>
+          <div class="prev-wrap" id="issueTable" style="max-height:220px"></div>
+          <div id="issueNote" style="font-size:9px;color:var(--tm);margin-top:5px"></div>
+        </div></div>
+
+        <!-- Cleaning Operations -->
+        <div class="clean-panel" id="cleanPanel">
+          <div class="clean-panel-title"><i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="cleaning_ops">Pilih Operasi Pembersihan Data</span></div>
+
+          <!-- Column scope selector -->
+          <div style="background:var(--sf2);border:1px solid var(--bd);border-radius:8px;padding:9px 11px">
+            <div style="font-size:10px;font-weight:700;color:var(--ts);margin-bottom:6px;display:flex;align-items:center;gap:6px">
+              <i class="fa-solid fa-filter" style="color:var(--ac)"></i>
+              <span data-i18n="col_scope_title">Terapkan Pada Kolom (opsional)</span>
+            </div>
+            <div id="colScopeChips" style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px"></div>
+            <div style="font-size:9px;color:var(--tm)" data-i18n="col_scope_hint">Jika tidak dipilih, operasi akan diterapkan ke semua kolom yang relevan.</div>
+          </div>
+
+          <div class="clean-ops">
+            <label class="clean-op"><input type="checkbox" value="drop_duplicates" class="clean-chk"><div><div class="clean-op-label" data-i18n="op_dup">Hapus Duplikat</div><div class="clean-op-desc" data-i18n="op_dup_desc">Menghapus baris yang identik sepenuhnya</div></div></label>
+            <label class="clean-op"><input type="checkbox" value="drop_missing_rows" class="clean-chk"><div><div class="clean-op-label" data-i18n="op_drop_mv">Hapus Baris Missing Value</div><div class="clean-op-desc" data-i18n="op_drop_mv_desc">Hapus semua baris yang memiliki nilai kosong</div></div></label>
+            <label class="clean-op"><input type="checkbox" value="fill_missing_mean" class="clean-chk"><div><div class="clean-op-label" data-i18n="op_fill_mean">Isi Missing → Mean</div><div class="clean-op-desc" data-i18n="op_fill_mean_desc">Kolom numerik diisi rata-rata kolom</div></div></label>
+            <label class="clean-op"><input type="checkbox" value="fill_missing_median" class="clean-chk"><div><div class="clean-op-label" data-i18n="op_fill_median">Isi Missing → Median</div><div class="clean-op-desc" data-i18n="op_fill_median_desc">Kolom numerik diisi nilai tengah kolom</div></div></label>
+            <label class="clean-op"><input type="checkbox" value="fill_missing_mode" class="clean-chk"><div><div class="clean-op-label" data-i18n="op_fill_mode">Isi Missing → Modus</div><div class="clean-op-desc" data-i18n="op_fill_mode_desc">Kolom kategorikal diisi nilai terbanyak</div></div></label>
+            <label class="clean-op"><input type="checkbox" value="fill_missing_unknown" class="clean-chk"><div><div class="clean-op-label" data-i18n="op_fill_unk">Isi Missing → "Unknown"</div><div class="clean-op-desc" data-i18n="op_fill_unk_desc">Kolom kategorikal diisi teks "Unknown"</div></div></label>
+            <label class="clean-op"><input type="checkbox" value="remove_outliers_iqr" class="clean-chk"><div><div class="clean-op-label" data-i18n="op_remove_out">Hapus Outlier (IQR)</div><div class="clean-op-desc" data-i18n="op_remove_out_desc">Hapus baris di luar 1.5×IQR semua kolom numerik</div></div></label>
+            <label class="clean-op"><input type="checkbox" value="cap_outliers_iqr" class="clean-chk"><div><div class="clean-op-label" data-i18n="op_cap_out">Cap Outlier (IQR)</div><div class="clean-op-desc" data-i18n="op_cap_out_desc">Batasi nilai ekstrem ke batas IQR (Winsorize)</div></div></label>
+            <label class="clean-op"><input type="checkbox" value="normalize_strings" class="clean-chk"><div><div class="clean-op-label" data-i18n="op_norm_str">Normalisasi String</div><div class="clean-op-desc" data-i18n="op_norm_str_desc">Trim, lowercase, standarisasi teks kategori</div></div></label>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:4px;flex-wrap:wrap">
+            <button class="btn-an" style="margin:0" onclick="doClean()"><i class="fa-solid fa-play"></i> <span data-i18n="run_clean">Jalankan Pembersihan</span></button>
+            <button class="btn-br" onclick="clSelectAll(true)"><span data-i18n="select_all">Pilih Semua</span></button>
+            <button class="btn-br" onclick="clSelectAll(false)"><span data-i18n="clear_all">Bersihkan Pilihan</span></button>
+            <button class="btn-warn" style="margin-left:auto" onclick="doResetClean()"><i class="fa-solid fa-rotate-left"></i> <span data-i18n="reset_clean">Kembali ke Data Awal</span></button>
+          </div>
+        </div>
+
+        <!-- Clean Log -->
+        <div id="cleanLogWrap" style="display:none" class="card"><div class="cb" style="padding:10px 14px">
+          <div class="ct"><i class="fa-solid fa-terminal"></i> <span data-i18n="clean_log">Log Pembersihan</span></div>
+          <div class="clean-log" id="cleanLog"></div>
+          <div id="clStatus" style="margin-top:6px"></div>
+        </div></div>
+
+      </div>
+    </div>
+
+    <!-- ===== STATISTIK ===== -->
+    <div class="page" id="pgStats">
+      <div id="stEmpty" class="nodata"><i class="fa-solid fa-calculator"></i><p data-i18n="upload_first_short">Upload file terlebih dahulu.</p></div>
+      <div id="stCt" style="display:none">
+        <div class="card"><div class="cb">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            <button class="vtab active" id="statsNumBtn" onclick="statsTab('num')">📈 <span data-i18n="numerical">Numerik</span></button>
+            <button class="vtab" id="statsCatBtn" onclick="statsTab('cat')">🏷️ <span data-i18n="categorical">Kategorikal</span></button>
+          </div>
+          <div class="tw" id="statsBody" style="margin-top:12px">
+            <div id="numT"></div>
+            <div id="catT" style="display:none"></div>
+          </div>
+        </div></div>
+      </div>
+    </div>
+
+    <!-- ===== VISUALISASI (POIN 5) ===== -->
+    <div class="page" id="pgViz">
+      <div id="vzEmpty" class="nodata"><i class="fa-solid fa-chart-bar"></i><p data-i18n="upload_first_viz">Upload file terlebih dahulu untuk melihat visualisasi.</p></div>
+      <div id="vzOK" style="display:none;flex-direction:column;gap:10px">
+        <!-- Tabs -->
+        <div class="card" style="flex-shrink:0"><div class="cb" style="padding:8px 10px">
+          <div class="vtabs" id="vizTabs">
+            <button class="vtab active" onclick="vizSec('num')"><i class="fa-solid fa-hashtag"></i> Numerical</button>
+            <button class="vtab" onclick="vizSec('cat')"><i class="fa-solid fa-font"></i> Categorical</button>
+            <button class="vtab" onclick="vizSec('biv')"><i class="fa-solid fa-circle-nodes"></i> Bivariate</button>
+            <button class="vtab" onclick="vizSec('cvn')"><i class="fa-solid fa-layer-group"></i> Cat vs Num</button>
+          </div>
+        </div></div>
+
+        <!-- POIN 5: Viz Config Bar -->
+        <div class="viz-config-bar" id="vizConfigBar">
+          <span class="viz-config-label" data-i18n="chart_type">Jenis Chart:</span>
+          <select class="viz-select" id="vizChartSelect" onchange="onVizConfigChange()">
+            <!-- populated per section -->
+          </select>
+          <span class="viz-config-label" style="margin-left:8px" data-i18n="color_theme">Warna:</span>
+          <!-- preset swatches -->
+          <div id="colorSwatches" style="display:flex;gap:5px;align-items:center">
+            <div class="color-swatch active" style="background:#0d9488" data-color="#0d9488" onclick="setVizColor(this,'#0d9488')"></div>
+            <div class="color-swatch" style="background:#2563eb" data-color="#2563eb" onclick="setVizColor(this,'#2563eb')"></div>
+            <div class="color-swatch" style="background:#7c3aed" data-color="#7c3aed" onclick="setVizColor(this,'#7c3aed')"></div>
+            <div class="color-swatch" style="background:#d97706" data-color="#d97706" onclick="setVizColor(this,'#d97706')"></div>
+            <div class="color-swatch" style="background:#dc2626" data-color="#dc2626" onclick="setVizColor(this,'#dc2626')"></div>
+            <div class="color-swatch" style="background:#16a34a" data-color="#16a34a" onclick="setVizColor(this,'#16a34a')"></div>
+          </div>
+          <!-- custom color picker -->
+          <label style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--tm);cursor:pointer">
+            <input type="color" class="color-custom" id="colorCustom" value="#0d9488" oninput="setVizColorCustom(this.value)" title="Custom color">
+            <span data-i18n="custom">Kustom</span>
+          </label>
+          <button class="btn-an" style="margin:0;padding:5px 12px;font-size:10px" onclick="applyVizConfig()"><i class="fa-solid fa-rotate"></i> <span data-i18n="apply">Terapkan</span></button>
+        </div>
+
+        <div id="vzLoad" style="display:none;text-align:center;padding:24px">
+          <div class="al al-l" style="justify-content:center"><span class="spin"></span>&nbsp;<span data-i18n="generating">Generating charts...</span></div>
+        </div>
+        <div id="vzGrid" class="vgrid"></div>
+      </div>
+    </div>
+
+    <!-- ===== TIME SERIES ===== -->
+    <div class="page" id="pgTs">
+      <div id="tsEmpty" class="nodata"><i class="fa-solid fa-wave-square"></i><p data-i18n="upload_first_short">Upload file terlebih dahulu.</p></div>
+      <div id="tsCt2" style="display:none;flex-direction:column;gap:10px">
+        <div class="card"><div class="cb" style="padding:12px 16px">
+          <div class="ct"><i class="fa-solid fa-wave-square"></i> <span data-i18n="ts_title">Time Series Analytics</span>
+            <span style="margin-left:auto">
+              <button class="btn-an" id="btnTs" onclick="loadTS()" style="margin:0;padding:5px 14px;font-size:10px"><i class="fa-solid fa-play"></i> <span data-i18n="run_ts">Analisis Time Series</span></button>
+            </span>
+          </div>
+          <p style="font-size:11px;color:var(--tm)" data-i18n="ts_sub">Auto-detect kolom datetime → trend line, moving average, rolling mean.</p>
+          <div id="tsSt" style="margin-top:8px"></div>
+        </div></div>
+        <div id="tsCharts" style="display:none;flex-direction:column;gap:10px"></div>
+      </div>
+    </div>
+
+    <!-- ===== EXPORT ===== -->
+    <!-- ===== SMART INSIGHT PAGE ===== -->
+    <div class="page" id="pgInsight">
+      <div id="siEmpty" class="nodata"><i class="fa-solid fa-lightbulb"></i><p data-i18n="upload_first_short">Upload file terlebih dahulu.</p></div>
+      <div id="siCt" style="display:none;flex-direction:column;gap:10px">
+        <!-- Header bar -->
+        <div class="card" style="flex-shrink:0"><div class="cb" style="padding:10px 14px;flex-direction:row;align-items:center;gap:10px">
+          <i class="fa-solid fa-lightbulb" style="color:var(--ac)"></i>
+          <span style="font-size:12px;font-weight:700;color:var(--tp)" data-i18n="nav_insight">Smart Insight & Rekomendasi</span>
+          <span style="font-size:10px;color:var(--tm);flex:1" data-i18n="si_sub">Analisis mendalam otomatis berdasarkan data yang diunggah</span>
+          <button class="btn-an" style="margin:0;padding:5px 12px;font-size:10px" onclick="loadInsights()"><i class="fa-solid fa-rotate"></i> <span data-i18n="si_refresh">Refresh</span></button>
+        </div></div>
+        <!-- Overview -->
+        <div class="card" id="siOverview"><div class="cb" style="padding:10px 14px">
+          <div class="ct"><i class="fa-solid fa-circle-info"></i> <span data-i18n="si_overview">Ringkasan Dataset</span></div>
+          <div id="siOverviewBody" style="font-size:11px;color:var(--ts);line-height:1.7"></div>
+        </div></div>
+        <!-- Data Quality -->
+        <div class="card" id="siQuality"><div class="cb" style="padding:10px 14px">
+          <div class="ct"><i class="fa-solid fa-shield-halved"></i> <span data-i18n="si_quality">Kualitas Data</span></div>
+          <div id="siQualityBody" style="font-size:11px;color:var(--ts);line-height:1.7"></div>
+        </div></div>
+        <!-- Numeric + Categorical (2-col) -->
+        <div class="two-col">
+          <div class="card"><div class="cb" style="padding:10px 14px">
+            <div class="ct"><i class="fa-solid fa-hashtag"></i> <span data-i18n="si_numeric">Insight Variabel Numerik</span></div>
+            <div id="siNumBody" style="font-size:11px;color:var(--ts);line-height:1.7;max-height:340px;overflow:auto"></div>
+          </div></div>
+          <div class="card"><div class="cb" style="padding:10px 14px">
+            <div class="ct"><i class="fa-solid fa-font"></i> <span data-i18n="si_categorical">Insight Variabel Kategorikal</span></div>
+            <div id="siCatBody" style="font-size:11px;color:var(--ts);line-height:1.7;max-height:340px;overflow:auto"></div>
+          </div></div>
+        </div>
+        <!-- Correlations -->
+        <div class="card"><div class="cb" style="padding:10px 14px">
+          <div class="ct"><i class="fa-solid fa-circle-nodes"></i> <span data-i18n="si_corr">Korelasi Antar Variabel</span></div>
+          <div id="siCorrBody" style="font-size:11px;color:var(--ts);line-height:1.7"></div>
+        </div></div>
+        <!-- Recommendations -->
+        <div class="card" style="border:1px solid var(--ac)"><div class="cb" style="padding:10px 14px">
+          <div class="ct" style="color:var(--ac)"><i class="fa-solid fa-circle-check"></i> <span data-i18n="si_rec">Rekomendasi</span></div>
+          <div id="siRecBody" style="font-size:11px;color:var(--ts);line-height:1.7"></div>
+        </div></div>
+      </div>
+    </div>
+
+    <!-- ===== EXPORT PAGE ===== -->
+    <div class="page" id="pgExp">
+      <div class="card"><div class="cb">
+        <div class="ct"><i class="fa-solid fa-file-export"></i> <span data-i18n="export_title">Export Laporan</span></div>
+        <p style="font-size:12px;color:var(--tm);margin-bottom:4px" data-i18n="export_sub">Download hasil analisis dalam berbagai format.</p>
+        <p style="font-size:10px;color:var(--tm);margin-bottom:12px;display:flex;align-items:center;gap:5px">
+          <i class="fa-solid fa-language" style="color:var(--ac)"></i>
+          <span data-i18n="exp_lang_follow">Laporan HTML / PDF akan mengikuti bahasa dashboard saat ini</span>
+          <b id="expCurrentLang" style="color:var(--ac)"></b>
+        </p>
+        <div class="exp-grid" style="grid-template-columns:repeat(4,1fr)">
+          <div class="exp-card" onclick="doExp('csv')"><i class="fa-solid fa-file-csv" style="color:#16a34a"></i><span>CSV</span><small data-i18n="exp_raw">Raw dataset</small></div>
+          <div class="exp-card" onclick="doExp('excel')"><i class="fa-solid fa-file-excel" style="color:#16a34a"></i><span>Excel (.xlsx)</span><small data-i18n="exp_stats">Dataset + statistik</small></div>
+          <div class="exp-card" onclick="doExp('html')"><i class="fa-brands fa-html5" style="color:#f97316"></i><span>HTML Report</span><small data-i18n="exp_html">Full laporan</small></div>
+          <div class="exp-card" onclick="doExp('pdf')"><i class="fa-solid fa-file-pdf" style="color:#dc2626"></i><span>PDF Report</span><small data-i18n="exp_pdf">Download PDF</small></div>
+        </div>
+        <div id="expSt" style="margin-top:12px"></div>
+      </div></div>
+    </div>
+
+  </div><!-- /main-w -->
+</div><!-- /scApp -->
+
+<!-- IMAGE MODAL -->
+<div class="modal" id="M" onclick="closeM(event)">
+  <div class="modal-inner" onclick="event.stopPropagation()">
+    <div class="modal-h"><div class="modal-title" id="mTit">Chart</div><button class="modal-x" onclick="closeM()"><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="modal-b"><img id="mImg" src="" alt="chart"></div>
+    <div class="modal-nav"><button class="marr" onclick="mnav(-1)"><i class="fa-solid fa-chevron-left"></i> Prev</button><span class="mctr" id="mCtr">1/1</span><button class="marr" onclick="mnav(1)">Next <i class="fa-solid fa-chevron-right"></i></button></div>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+<script src="https://cdn.plot.ly/plotly-2.30.0.min.js"></script>
+<script>
+/* ================================================================
+   I18N — POIN 4: BILINGUAL (ID / EN)
+   ================================================================ */
+const I18N = {
+  id: {
+    welcome:'Selamat Datang', member:'Anggota', chair:'Ketua',
+    start_analysis:'Mulai Analisis', main_menu:'Menu Utama',
+    nav_dashboard:'Dashboard', nav_upload:'Unggah Data', nav_preview:'Pratinjau Data',
+    nav_clean:'Pembersihan Data', nav_stats:'Statistik Deskriptif',
+    nav_viz:'Visualisasi', nav_ts:'Time Series', nav_export:'Export Laporan',
+    nav_insight:'Smart Insight & Rekomendasi',
+    sub_dashboard:'Ringkasan dataset dan analisis otomatis',
+    sub_upload:'Upload file baru untuk analisis',
+    sub_preview:'Pratinjau 10 baris + kualitas data',
+    sub_clean:'Bersihkan missing value, duplikat, outlier',
+    sub_stats:'9 metrik numerik + 5 metrik kategorikal',
+    sub_viz:'14 jenis chart interaktif',
+    sub_ts:'Trend, Moving Average, Rolling Mean',
+    sub_export:'CSV · Excel · HTML · PDF — Bilingual',
+    sub_insight:'Analisis mendalam otomatis + rekomendasi',
+    si_sub:'Analisis mendalam otomatis berdasarkan data yang diunggah',
+    si_refresh:'Refresh', si_overview:'Ringkasan Dataset', si_quality:'Kualitas Data',
+    si_numeric:'Insight Variabel Numerik', si_categorical:'Insight Variabel Kategorikal',
+    si_corr:'Korelasi Antar Variabel', si_rec:'Rekomendasi',
+    exp_lang_follow:'Laporan HTML / PDF akan mengikuti bahasa dashboard saat ini:',
+    exp_preview:'Preview', exp_preview_sub:'Lihat & Print',
+    kpi_rows:'Total Baris', kpi_cols:'Total Kolom', kpi_numeric:'Var. Numerik',
+    kpi_categorical:'Var. Kategorikal', kpi_records:'Rekaman data',
+    kpi_variables:'Variabel terdeteksi', kpi_num_cols:'Kolom angka', kpi_cat_cols:'Kolom teks',
+    no_dataset:'Belum Ada Dataset',
+    upload_first:'Upload file terlebih dahulu untuk memulai analisis.',
+    upload_first_short:'Upload file terlebih dahulu.',
+    upload_first_viz:'Upload file terlebih dahulu untuk melihat visualisasi.',
+    preview_title:'Pratinjau Dataset', first_5_rows:'5 baris pertama',
+    auto_insight:'Wawasan Otomatis dari Data', loading_insight:'Memuat wawasan...',
+    upload_title:'Unggah Sumber Dataset', dz_title:'Seret & Lepas File di Sini',
+    dz_sub:'atau klik untuk memilih file dari komputer Anda',
+    no_file:'Belum ada file dipilih...', choose_file:'Pilih File', start_btn:'Mulai Analisis Data',
+    data_quality:'Kualitas Data', click_to_clean:'Klik kartu bermasalah untuk pembersihan',
+    quality_summary:'Ringkasan Kualitas Data',
+    dq_rows:'Total Data', dq_missing:'Missing Value', dq_dup:'Duplikat', dq_outlier:'Outlier',
+    dq_ok:'Data Bersih ✓', dq_clean_now:'Bersihkan Sekarang →',
+    cleaning_ops:'Pilih Operasi Pembersihan Data',
+    op_dup:'Hapus Duplikat', op_dup_desc:'Menghapus baris yang identik sepenuhnya',
+    op_drop_mv:'Hapus Baris Missing Value', op_drop_mv_desc:'Hapus semua baris yang memiliki nilai kosong',
+    op_fill_mean:'Isi Missing → Mean', op_fill_mean_desc:'Kolom numerik diisi rata-rata kolom',
+    op_fill_median:'Isi Missing → Median', op_fill_median_desc:'Kolom numerik diisi nilai tengah kolom',
+    op_fill_mode:'Isi Missing → Modus', op_fill_mode_desc:'Kolom kategorikal diisi nilai terbanyak',
+    op_fill_unk:'Isi Missing → "Unknown"', op_fill_unk_desc:'Kolom kategorikal diisi teks "Unknown"',
+    op_remove_out:'Hapus Outlier (IQR)', op_remove_out_desc:'Hapus baris di luar 1.5×IQR semua kolom numerik',
+    op_cap_out:'Cap Outlier (IQR)', op_cap_out_desc:'Batasi nilai ekstrem ke batas IQR (Winsorize)',
+    op_norm_str:'Normalisasi String', op_norm_str_desc:'Trim, lowercase, standarisasi teks kategori',
+    run_clean:'Jalankan Pembersihan', select_all:'Pilih Semua', clear_all:'Bersihkan Pilihan',
+    clean_log:'Log Pembersihan',
+    numerical:'Numerik', categorical:'Kategorikal',
+    chart_type:'Jenis Chart:', color_theme:'Warna:', custom:'Kustom', apply:'Terapkan',
+    generating:'Generating charts...',
+    ts_title:'Time Series Analytics',
+    ts_sub:'Auto-detect kolom datetime → trend line, moving average, rolling mean.',
+    run_ts:'Analisis Time Series',
+    export_title:'Export Laporan', export_sub:'Download hasil analisis dalam berbagai format.',
+    exp_raw:'Raw dataset', exp_stats:'Dataset + statistik', exp_html:'Full dashboard', exp_pdf:'Print-ready',
+    data_clean_ok:'✓ Data sudah bersih — tidak ada masalah terdeteksi.',
+    data_has_issues:'⚠ Data memiliki masalah — disarankan untuk dibersihkan.',
+    rows_label:'baris', page_of:'dari',
+    lecturer_label:'Lecturer',
+    reset_clean:'Kembali ke Data Awal',
+    reset_confirm:'Yakin ingin mengembalikan data ke kondisi sebelum dibersihkan? Semua hasil pembersihan akan dibatalkan.',
+    reset_done:'Data berhasil dikembalikan ke kondisi awal sebelum pembersihan.',
+    reset_none:'Tidak ada riwayat pembersihan untuk direset.',
+    issue_preview_title:'Pratinjau Baris Bermasalah',
+    tab_missing:'Missing Value', tab_outlier:'Outlier',
+    col_scope_title:'Terapkan Pada Kolom (opsional)',
+    col_scope_hint:'Jika tidak dipilih, operasi akan diterapkan ke semua kolom yang relevan.',
+    no_missing_rows:'Tidak ada baris dengan missing value. Data bersih dari sisi ini ✓',
+    no_outlier_rows:'Tidak ada outlier terdeteksi pada kolom numerik. Data bersih dari sisi ini ✓',
+    showing_max:'Menampilkan maksimal 50 baris pertama yang bermasalah.',
+  },
+  en: {
+    welcome:'Welcome', member:'Member', chair:'Chair',
+    start_analysis:'Start Analysis', main_menu:'Main Menu',
+    nav_dashboard:'Dashboard', nav_upload:'Upload Data', nav_preview:'Data Preview',
+    nav_clean:'Data Cleaning', nav_stats:'Descriptive Statistics',
+    nav_viz:'Visualization', nav_ts:'Time Series', nav_export:'Export Report',
+    nav_insight:'Smart Insight & Recommendations',
+    sub_dashboard:'Dataset summary and automated analysis',
+    sub_upload:'Upload a new file for analysis',
+    sub_preview:'Preview 10 rows + data quality',
+    sub_clean:'Clean missing values, duplicates, outliers',
+    sub_stats:'9 numerical metrics + 5 categorical metrics',
+    sub_viz:'14 interactive chart types',
+    sub_ts:'Trend, Moving Average, Rolling Mean',
+    sub_export:'CSV · Excel · HTML · PDF — Bilingual',
+    sub_insight:'Automated deep analysis + recommendations',
+    si_sub:'Automated deep analysis based on uploaded data',
+    si_refresh:'Refresh', si_overview:'Dataset Summary', si_quality:'Data Quality',
+    si_numeric:'Numerical Variable Insights', si_categorical:'Categorical Variable Insights',
+    si_corr:'Correlations Between Variables', si_rec:'Recommendations',
+    exp_lang_follow:'HTML / PDF report will follow the current dashboard language:',
+    exp_preview:'Preview', exp_preview_sub:'View & Print',
+    kpi_rows:'Total Rows', kpi_cols:'Total Columns', kpi_numeric:'Numeric Vars',
+    kpi_categorical:'Categorical Vars', kpi_records:'Data records',
+    kpi_variables:'Variables detected', kpi_num_cols:'Number columns', kpi_cat_cols:'Text columns',
+    no_dataset:'No Dataset Yet',
+    upload_first:'Upload a file first to begin automated data analysis.',
+    upload_first_short:'Upload a file first.',
+    upload_first_viz:'Upload a file first to see visualizations.',
+    preview_title:'Dataset Preview', first_5_rows:'First 5 rows',
+    auto_insight:'Automated Data Insights', loading_insight:'Loading insights...',
+    upload_title:'Upload Dataset Source', dz_title:'Drag & Drop File Here',
+    dz_sub:'or click to select a file from your computer',
+    no_file:'No file chosen...', choose_file:'Choose File', start_btn:'Start Data Analysis',
+    data_quality:'Data Quality', click_to_clean:'Click problem cards to start cleaning',
+    quality_summary:'Data Quality Summary',
+    dq_rows:'Total Records', dq_missing:'Missing Values', dq_dup:'Duplicates', dq_outlier:'Outliers',
+    dq_ok:'Data Clean ✓', dq_clean_now:'Clean Now →',
+    cleaning_ops:'Select Data Cleaning Operations',
+    op_dup:'Drop Duplicates', op_dup_desc:'Remove completely identical rows',
+    op_drop_mv:'Drop Missing Rows', op_drop_mv_desc:'Remove all rows with any missing value',
+    op_fill_mean:'Fill Missing → Mean', op_fill_mean_desc:'Fill numeric columns with column mean',
+    op_fill_median:'Fill Missing → Median', op_fill_median_desc:'Fill numeric columns with column median',
+    op_fill_mode:'Fill Missing → Mode', op_fill_mode_desc:'Fill categorical columns with most frequent value',
+    op_fill_unk:'Fill Missing → "Unknown"', op_fill_unk_desc:'Fill categorical columns with "Unknown"',
+    op_remove_out:'Remove Outliers (IQR)', op_remove_out_desc:'Drop rows outside 1.5×IQR for all numeric columns',
+    op_cap_out:'Cap Outliers (IQR)', op_cap_out_desc:'Clip extreme values to IQR bounds (Winsorize)',
+    op_norm_str:'Normalize Strings', op_norm_str_desc:'Trim, lowercase, standardize category text',
+    run_clean:'Run Cleaning', select_all:'Select All', clear_all:'Clear All',
+    clean_log:'Cleaning Log',
+    numerical:'Numerical', categorical:'Categorical',
+    chart_type:'Chart Type:', color_theme:'Color:', custom:'Custom', apply:'Apply',
+    generating:'Generating charts...',
+    ts_title:'Time Series Analytics',
+    ts_sub:'Auto-detect datetime column → trend line, moving average, rolling mean.',
+    run_ts:'Run Time Series Analysis',
+    export_title:'Export Report', export_sub:'Download analysis results in various formats.',
+    exp_raw:'Raw dataset', exp_stats:'Dataset + statistics', exp_html:'Full dashboard', exp_pdf:'Print-ready',
+    data_clean_ok:'✓ Data is clean — no issues detected.',
+    data_has_issues:'⚠ Data has issues — cleaning is recommended.',
+    rows_label:'rows', page_of:'of',
+    lecturer_label:'Lecturer',
+    reset_clean:'Reset to Original Data',
+    reset_confirm:'Are you sure you want to revert the data to its pre-cleaning state? All cleaning results will be discarded.',
+    reset_done:'Data has been reverted to its state before cleaning.',
+    reset_none:'No cleaning history to reset.',
+    issue_preview_title:'Problem Row Preview',
+    tab_missing:'Missing Value', tab_outlier:'Outlier',
+    col_scope_title:'Apply to Columns (optional)',
+    col_scope_hint:'If none selected, the operation will be applied to all relevant columns.',
+    no_missing_rows:'No rows with missing values. Data is clean on this front ✓',
+    no_outlier_rows:'No outliers detected in numerical columns. Data is clean on this front ✓',
+    showing_max:'Showing a maximum of the first 50 problematic rows.',
+  }
+};
+
+let LANG = localStorage.getItem('ds-lang') || 'id';
+
+function t(key){ return (I18N[LANG]||I18N.id)[key] || key; }
+
+function applyI18n(){
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k = el.getAttribute('data-i18n');
+    el.textContent = t(k);
+  });
+}
+
+function switchLang(lang){
+  LANG = lang;
+  localStorage.setItem('ds-lang', lang);
+  applyI18n();
+  // Update page subtitles if on a page
+  if(CUR && PM[CUR]) updateTopbar(CUR);
+  updateExpLangIndicator();
+}
+
+function updateExpLangIndicator(){
+  const el=document.getElementById('expCurrentLang');
+  if(!el) return;
+  el.textContent = LANG==='id' ? '🇮🇩 Bahasa Indonesia' : '🇬🇧 English';
+}
+
+/* ================================================================
+   STATE
+   ================================================================ */
+let AD=null, VD=null, VDI=null, VL=false, CUR='dash', ALC=[], MI=0;
+let VIZ_CURRENT_SEC='num';
+let VIZ_COLOR='#0d9488';
+let PV_PAGE=1, PV_TOTAL=1;
+
+/* ================================================================
+   CHART DEFINITIONS
+   ================================================================ */
+const CHART_DEFS={
+  num:[
+    {key:'histogram',  label:'Histogram',    icon:'fa-chart-column', desc:'Distribusi frekuensi data numerik'},
+    {key:'boxplot',    label:'Boxplot',       icon:'fa-box',          desc:'Sebaran & outlier data'},
+    {key:'density',    label:'Density Plot',  icon:'fa-wave-square',  desc:'Estimasi kepadatan probabilitas'},
+    {key:'qqplot',     label:'QQ Plot',       icon:'fa-circle-dot',   desc:'Uji normalitas distribusi data'},
+    {key:'violin',     label:'Violin Plot',   icon:'fa-music',        desc:'Distribusi + probabilitas terintegrasi'},
+  ],
+  cat:[
+    {key:'bar',        label:'Bar Chart',     icon:'fa-chart-bar',    desc:'Frekuensi per kategori'},
+    {key:'pie',        label:'Pie Chart',     icon:'fa-chart-pie',    desc:'Proporsi setiap kategori'},
+    {key:'countplot',  label:'Count Plot',    icon:'fa-list-ol',      desc:'Jumlah observasi per kategori'},
+    {key:'pareto',     label:'Pareto Chart',  icon:'fa-chart-line',   desc:'Analisis 80/20 distribusi kategori'},
+  ],
+  biv:[
+    {key:'scatter',    label:'Scatter Plot',        icon:'fa-braille',     desc:'Hubungan dua variabel numerik'},
+    {key:'heatmap',    label:'Correlation Heatmap', icon:'fa-border-all',  desc:'Matriks korelasi antar kolom numerik'},
+    {key:'pairplot',   label:'Pair Plot',           icon:'fa-table-cells', desc:'Semua kombinasi pasangan variabel'},
+    {key:'regression', label:'Regression Plot',     icon:'fa-chart-line',  desc:'Tren regresi linier antar variabel'},
+    {key:'bubble',     label:'Bubble Chart',        icon:'fa-circle',      desc:'Scatter dengan dimensi ukuran ke-3'},
+  ],
+  cvn:[
+    {key:'boxplot_by_cat', label:'Boxplot by Category',     icon:'fa-box',           desc:'Distribusi numerik per kategori'},
+    {key:'violin_by_cat',  label:'Violin Plot by Category', icon:'fa-music',         desc:'Kepadatan & distribusi per kategori'},
+    {key:'grouped_bar',    label:'Grouped Bar Chart',       icon:'fa-chart-bar',     desc:'Rata-rata numerik antar kategori'},
+    {key:'strip',          label:'Strip Plot',              icon:'fa-grip-vertical', desc:'Titik data tersebar per kategori'},
+  ]
+};
+const SECTION_META={
+  num:{label:'(a) Numerical Visualization',   icon:'fa-hashtag',      color:'var(--k1)',bg:'var(--k1b)'},
+  cat:{label:'(b) Categorical Visualization', icon:'fa-font',         color:'var(--k2)',bg:'var(--k2b)'},
+  biv:{label:'(c) Bivariate & Multivariate',  icon:'fa-circle-nodes', color:'var(--k3)',bg:'var(--k3b)'},
+  cvn:{label:'(d) Categorical vs Numerical',  icon:'fa-layer-group',  color:'var(--k4)',bg:'var(--k4b)'},
+};
+
+/* ================================================================
+   PAGE MAP
+   ================================================================ */
+const PM={
+  dash:    {pg:'pgDash',    n:'n-dash',     tk:'nav_dashboard', sk:'sub_dashboard'},
+  upload:  {pg:'pgUpload',  n:'n-upload',   tk:'nav_upload',    sk:'sub_upload'},
+  prev:    {pg:'pgPrev',    n:'n-prev',     tk:'nav_preview',   sk:'sub_preview'},
+  clean:   {pg:'pgClean',   n:'n-clean',    tk:'nav_clean',     sk:'sub_clean'},
+  stats:   {pg:'pgStats',   n:'n-stats',    tk:'nav_stats',     sk:'sub_stats'},
+  viz:     {pg:'pgViz',     n:'n-viz',      tk:'nav_viz',       sk:'sub_viz'},
+  ts:      {pg:'pgTs',      n:'n-ts',       tk:'nav_ts',        sk:'sub_ts'},
+  insight: {pg:'pgInsight', n:'n-insight',  tk:'nav_insight',   sk:'sub_insight'},
+  exp:     {pg:'pgExp',     n:'n-exp',      tk:'nav_export',    sk:'sub_export'},
+};
+
+function updateTopbar(name){
+  const m=PM[name];
+  document.getElementById('topT').innerHTML=`<span class="pulse"></span>${t(m.tk)}`;
+  document.getElementById('topS').textContent=t(m.sk);
+}
+
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function go(name){
+  const m=PM[name]; if(!m)return; CUR=name;
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(m.pg).classList.add('active');
+  document.querySelectorAll('.nav').forEach(b=>b.classList.remove('active'));
+  document.getElementById(m.n).classList.add('active');
+  updateTopbar(name);
+
+  if(name==='dash'&&AD) loadDashCharts();
+  if(name==='prev'){
+    const e=document.getElementById('pvEmpty'),c=document.getElementById('pvCt');
+    if(AD){e.style.display='none';c.style.display='flex';pvLoadPage(PV_PAGE);}
+    else{e.style.display='';c.style.display='none';}
+  }
+  if(name==='clean'){
+    const e=document.getElementById('clEmpty'),c=document.getElementById('clCt');
+    if(AD){e.style.display='none';c.style.display='flex';renderCleanQuality(AD.quality);loadIssuePreview();}
+    else{e.style.display='';c.style.display='none';}
+  }
+  if(name==='stats'){
+    document.getElementById('stEmpty').style.display=AD?'none':'flex';
+    document.getElementById('stCt').style.display=AD?'block':'none';
+    if(AD) statsTab('num');
+  }
+  if(name==='ts'){
+    const e=document.getElementById('tsEmpty'),c=document.getElementById('tsCt2');
+    if(AD){e.style.display='none';c.style.display='flex';}
+    else{e.style.display='';c.style.display='none';}
+  }
+  if(name==='insight'){
+    const e=document.getElementById('siEmpty'),c=document.getElementById('siCt');
+    if(AD){e.style.display='none';c.style.display='flex';loadInsights();}
+    else{e.style.display='';c.style.display='none';}
+  }
+  if(name==='exp'){
+    updateExpLangIndicator();
+  }
+  if(name==='viz'){
+    document.getElementById('vzEmpty').style.display=AD?'none':'flex';
+    document.getElementById('vzOK').style.display=AD?'flex':'none';
+    updateVizConfigBar(VIZ_CURRENT_SEC);
+    if(AD&&!VL) loadViz();
+    else if(AD&&VL) renderVizSection(VIZ_CURRENT_SEC);
+  }
+}
+
+function toggleSB(){
+  const sb=document.getElementById('SB'),ic=document.getElementById('colIco');
+  sb.classList.toggle('collapsed');
+  ic.className=sb.classList.contains('collapsed')?'fa-solid fa-chevron-right':'fa-solid fa-chevron-left';
+}
+
+/* ================================================================
+   THEME
+   ================================================================ */
+const html=document.documentElement;
+if(localStorage.getItem('ds-theme')==='dark'){
+  html.setAttribute('data-theme','dark');
+  document.addEventListener('DOMContentLoaded',()=>{
+    const i=document.getElementById('thIco');if(i)i.className='fa-solid fa-sun';
+  });
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  // Theme
+  document.getElementById('thBtn').addEventListener('click',()=>{
+    const d=html.getAttribute('data-theme')==='dark';
+    html.setAttribute('data-theme',d?'light':'dark');
+    document.getElementById('thIco').className=d?'fa-solid fa-moon':'fa-solid fa-sun';
+    localStorage.setItem('ds-theme',d?'light':'dark');
+  });
+  // Language
+  const ls=document.getElementById('langSelect');
+  ls.value=LANG;
+  ls.addEventListener('change',e=>switchLang(e.target.value));
+  applyI18n();
+  updateExpLangIndicator();
+  // File input
+  document.getElementById('fi').addEventListener('change',function(){
+    document.getElementById('dzN').textContent=this.files[0]?this.files[0].name:t('no_file');
+  });
+  // Drag drop
+  const dz=document.getElementById('dz');
+  dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('drag-over');});
+  dz.addEventListener('dragleave',()=>dz.classList.remove('drag-over'));
+  dz.addEventListener('drop',e=>{
+    e.preventDefault();dz.classList.remove('drag-over');
+    const f=e.dataTransfer.files[0];
+    if(f){const dt=new DataTransfer();dt.items.add(f);document.getElementById('fi').files=dt.files;document.getElementById('dzN').textContent=f.name;}
+  });
+  document.getElementById('undoBtn').addEventListener('click',()=>show('scLanding'));
+  document.getElementById('pageSearch').addEventListener('input',e=>pageSearch(e.target.value));
+  document.getElementById('notifBtn').addEventListener('click',()=>alert(t('data_clean_ok')));
+});
+
+/* ================================================================
+   UPLOAD
+   ================================================================ */
+function doUpload(){
+  const fi=document.getElementById('fi');
+  const st=document.getElementById('upSt');
+  if(!fi.files[0]){st.innerHTML=`<div class="al al-er"><i class="fa-solid fa-triangle-exclamation"></i> ${t('no_file')}</div>`;return;}
+  const btn=document.getElementById('btnUpload');
+  btn.disabled=true;
+  const fd=new FormData();fd.append('file',fi.files[0]);
+  st.innerHTML=`<div class="al al-l"><span class="spin"></span> ${t('generating')}...</div>`;
+  fetch('/upload',{method:'POST',body:fd})
+    .then(r=>r.ok?r.json():r.json().then(e=>{throw new Error(e.error||'Gagal')}))
+    .then(d=>{
+      AD=d; VL=false; VD=null; PV_PAGE=1;
+      st.innerHTML=`<div class="al al-ok"><i class="fa-solid fa-circle-check"></i> ${t('start_btn')} — selesai.</div>`;
+      document.getElementById('mR').textContent=d.meta.total_rows.toLocaleString('id-ID');
+      document.getElementById('mC').textContent=d.meta.total_cols.toLocaleString('id-ID');
+      document.getElementById('mN').textContent=d.meta.numeric_cols.toLocaleString('id-ID');
+      document.getElementById('mK').textContent=d.meta.categorical_cols.toLocaleString('id-ID');
+      rPrev(d.preview_5||d.preview_data||[]);
+      rNum(d.numeric_summary); rCat(d.categorical_summary);
+      document.getElementById('insC').innerHTML=renderInsightText(d.insights);
+      document.getElementById('stEmpty').style.display='none';
+      document.getElementById('stCt').style.display='block';
+      document.getElementById('dsEmpty').style.display='none';
+      document.getElementById('dsCt').style.display='flex';
+      btn.disabled=false;
+      setTimeout(()=>go('dash'),800);
+    })
+    .catch(err=>{
+      st.innerHTML=`<div class="al al-er"><i class="fa-solid fa-triangle-exclamation"></i> ${err.message}</div>`;
+      btn.disabled=false;
+    });
+}
+
+/* ================================================================
+   POIN 1: DATA PREVIEW — paginated 10 rows
+   ================================================================ */
+function pvLoadPage(page){
+  fetch(`/preview?page=${page}`)
+    .then(r=>r.json())
+    .then(d=>{
+      if(d.error){document.getElementById('pvTable').innerHTML=`<div class="nodata"><p>${d.error}</p></div>`;return;}
+      PV_PAGE   = d.page;
+      PV_TOTAL  = d.total_pages;
+      // Filename
+      const fn=AD?.meta?.filename||'';
+      document.getElementById('pvFilename').textContent=fn?`— ${fn}`:'';
+      // Row info
+      const start=(d.page-1)*10+1, end=Math.min(d.page*10,d.total_rows);
+      document.getElementById('pvRowInfo').textContent=`${start}–${end} ${t('rows_label')} ${t('page_of')} ${d.total_rows}`;
+      // Render table (no internal scroll, fixed 10 rows)
+      pvRenderTable(d.columns, d.rows);
+      // Pagination
+      document.getElementById('pvPagInfo').textContent=`${d.page} / ${d.total_pages}`;
+      document.getElementById('pvPrev').disabled = d.page <= 1;
+      document.getElementById('pvNext').disabled = d.page >= d.total_pages;
+      // Data quality strip (same data)
+      if(AD?.quality) renderDQStrip('dqStrip', AD.quality, true);
+    })
+    .catch(e=>console.error(e));
+}
+
+function pvRenderTable(cols, rows){
+  let h=`<table class="tbl"><thead><tr>`;
+  cols.forEach(c=>h+=`<th>${c}</th>`);
+  h+=`</tr></thead><tbody>`;
+  rows.forEach(r=>{
+    h+=`<tr>`;
+    cols.forEach(c=>{
+      const v=r[c];
+      const empty=(v===null||v===undefined||v==='');
+      h+=`<td class="${empty?'missing':''}">${empty?'—':v}</td>`;
+    });
+    h+=`</tr>`;
+  });
+  h+=`</tbody></table>`;
+  document.getElementById('pvTable').innerHTML=h;
+}
+
+function pvChangePage(delta){
+  const np=PV_PAGE+delta;
+  if(np<1||np>PV_TOTAL)return;
+  pvLoadPage(np);
+}
+
+/* ================================================================
+   POIN 2: DATA QUALITY KPI STRIP
+   ================================================================ */
+function renderDQStrip(containerId, q, clickable){
+  const el=document.getElementById(containerId);
+  if(!el||!q) return;
+
+  const hasMissing  = q.total_missing > 0;
+  const hasDup      = q.duplicates > 0;
+  const hasOutlier  = q.outliers > 0;
+  const hasIssue    = hasMissing || hasDup || hasOutlier;
+
+  const nav = clickable ? `onclick="go('clean')"` : '';
+  const clk = clickable ? 'clickable' : '';
+
+  el.innerHTML=`
+    <div class="dq-card ok">
+      <div class="dq-label">${t('dq_rows')}</div>
+      <div class="dq-val" style="color:var(--k1)">${(q.total_missing!==undefined?AD?.meta?.total_rows||'—':'—').toLocaleString?.()??AD?.meta?.total_rows??'—'}</div>
+      <div class="dq-sub">${AD?.meta?.total_cols??'—'} kolom</div>
+    </div>
+    <div class="dq-card ${hasMissing?'danger':'ok'} ${hasMissing?clk:''}" ${hasMissing?nav:''} title="${hasMissing?t('dq_clean_now'):''}">
+      <div class="dq-label">${t('dq_missing')}</div>
+      <div class="dq-val" style="color:${hasMissing?'var(--k5)':'var(--k1)'}">${q.total_missing}</div>
+      <div class="dq-sub">${q.missing_pct}% sel${hasMissing?' ⚠':' ✓'}</div>
+    </div>
+    <div class="dq-card ${hasDup?'warn':'ok'} ${hasDup?clk:''}" ${hasDup?nav:''} title="${hasDup?t('dq_clean_now'):''}">
+      <div class="dq-label">${t('dq_dup')}</div>
+      <div class="dq-val" style="color:${hasDup?'var(--k4)':'var(--k1)'}">${q.duplicates}</div>
+      <div class="dq-sub">${t('rows_label')}${hasDup?' ⚠':' ✓'}</div>
+    </div>
+    <div class="dq-card ${hasOutlier?'warn':'ok'} ${hasOutlier?clk:''}" ${hasOutlier?nav:''} title="${hasOutlier?t('dq_clean_now'):''}">
+      <div class="dq-label">${t('dq_outlier')}</div>
+      <div class="dq-val" style="color:${hasOutlier?'var(--k4)':'var(--k1)'}">${q.outliers}</div>
+      <div class="dq-sub">${Object.keys(q.outlier_cols||{}).length} kolom${hasOutlier?' ⚠':' ✓'}</div>
+    </div>
+    <div class="dq-card ${hasIssue?'warn':'ok'}">
+      <div class="dq-label">Status</div>
+      <div class="dq-val" style="font-size:13px;color:${hasIssue?'var(--k4)':'var(--k1)'}">${hasIssue?'⚠':'✓'}</div>
+      <div class="dq-sub">${hasIssue?t('dq_clean_now'):t('dq_ok')}</div>
+    </div>
+  `;
+}
+
+/* ================================================================
+   POIN 3: DATA CLEANING
+   ================================================================ */
+function renderCleanQuality(q){
+  if(!q)return;
+  renderDQStrip('clDqStrip', q, false);
+  const el=document.getElementById('clQualStatus');
+  if(!el)return;
+  const ok=q.is_clean;
+  el.innerHTML=`<div class="al ${ok?'al-ok':'al-w'}"><i class="fa-solid fa-${ok?'circle-check':'triangle-exclamation'}"></i> ${t(ok?'data_clean_ok':'data_has_issues')}</div>`;
+}
+
+/* ================================================================
+   ISSUE PREVIEW — missing/outlier rows
+   ================================================================ */
+let ISSUE_DATA = null;
+let ISSUE_CURRENT_TAB = 'missing';
+
+function loadIssuePreview(){
+  fetch('/clean/preview-issues').then(r=>r.json()).then(d=>{
+    if(d.error) return;
+    ISSUE_DATA = d;
+    document.getElementById('clIssueCard').style.display = (d.missing_total>0||d.outlier_total>0) ? 'block' : 'block';
+    document.getElementById('issueMissingCount').textContent = d.missing_total;
+    document.getElementById('issueOutlierCount').textContent = d.outlier_total;
+    renderColScopeChips(d.columns, d.missing_per_col, d.outlier_per_col);
+    issueTab(ISSUE_CURRENT_TAB);
+  }).catch(e=>console.error(e));
+}
+
+function issueTab(tab){
+  ISSUE_CURRENT_TAB = tab;
+  document.getElementById('issueTabMissing').classList.toggle('active', tab==='missing');
+  document.getElementById('issueTabOutlier').classList.toggle('active', tab==='outlier');
+  if(!ISSUE_DATA) return;
+
+  const rows = tab==='missing' ? ISSUE_DATA.missing_rows : ISSUE_DATA.outlier_rows;
+  const total = tab==='missing' ? ISSUE_DATA.missing_total : ISSUE_DATA.outlier_total;
+  const perCol = tab==='missing' ? ISSUE_DATA.missing_per_col : ISSUE_DATA.outlier_per_col;
+  const tableEl = document.getElementById('issueTable');
+  const noteEl  = document.getElementById('issueNote');
+
+  if(!rows || !rows.length){
+    tableEl.innerHTML = `<div class="nodata" style="padding:18px"><i class="fa-solid fa-circle-check" style="color:var(--k1)"></i><p>${t(tab==='missing'?'no_missing_rows':'no_outlier_rows')}</p></div>`;
+    noteEl.textContent='';
+    return;
+  }
+
+  const cols = Object.keys(rows[0]);
+  let h = `<table class="tbl"><thead><tr>`;
+  cols.forEach(c=>{
+    const flagged = perCol && perCol[c];
+    h += `<th style="${flagged?'color:#dc2626':''}">${c}${flagged?` <span style="font-size:8px">(${perCol[c]})</span>`:''}</th>`;
+  });
+  h += `</tr></thead><tbody>`;
+  rows.forEach(r=>{
+    h += `<tr>`;
+    cols.forEach(c=>{
+      const v = r[c];
+      const empty = (v===null||v===undefined||v==='');
+      const flagged = perCol && perCol[c];
+      const cellStyle = empty ? 'color:#dc2626;font-style:italic;background:#fee2e2' : (flagged?'background:#fff8e1':'');
+      h += `<td style="${cellStyle}">${empty?'—':v}</td>`;
+    });
+    h += `</tr>`;
+  });
+  h += `</tbody></table>`;
+  tableEl.innerHTML = h;
+  noteEl.textContent = total > rows.length ? `${t('showing_max')} (${total} total)` : '';
+}
+
+let SELECTED_COLS = new Set();
+
+function renderColScopeChips(allCols, missingPerCol, outlierPerCol){
+  const el = document.getElementById('colScopeChips');
+  if(!el) return;
+  el.innerHTML = allCols.map(col=>{
+    const hasMissing = missingPerCol && missingPerCol[col];
+    const hasOutlier = outlierPerCol && outlierPerCol[col];
+    const flag = hasMissing||hasOutlier ? `<i class="fa-solid fa-triangle-exclamation" style="color:#d97706"></i>` : '';
+    return `<span class="col-chip" data-col="${col}" onclick="toggleColChip(this,'${col}')">${flag}${col}</span>`;
+  }).join('');
+}
+
+function toggleColChip(el, col){
+  if(SELECTED_COLS.has(col)){ SELECTED_COLS.delete(col); el.classList.remove('active'); }
+  else { SELECTED_COLS.add(col); el.classList.add('active'); }
+}
+
+function clSelectAll(v){
+  document.querySelectorAll('.clean-chk').forEach(c=>c.checked=v);
+}
+
+function doClean(){
+  const ops=[...document.querySelectorAll('.clean-chk:checked')].map(c=>c.value);
+  if(!ops.length){
+    document.getElementById('clStatus').innerHTML=`<div class="al al-w"><i class="fa-solid fa-info-circle"></i> Pilih minimal satu operasi.</div>`;
+    return;
+  }
+  const columns = [...SELECTED_COLS];
+  document.getElementById('clStatus').innerHTML=`<div class="al al-l"><span class="spin"></span> Membersihkan data...</div>`;
+  fetch('/clean',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ops, columns})})
+    .then(r=>r.json())
+    .then(d=>{
+      if(d.error){document.getElementById('clStatus').innerHTML=`<div class="al al-er"><i class="fa-solid fa-triangle-exclamation"></i> ${d.error}</div>`;return;}
+      // Update AD quality
+      AD.quality=d.quality;
+      AD.meta.total_rows=d.rows_after;
+      document.getElementById('mR').textContent=d.rows_after.toLocaleString('id-ID');
+      // Show log
+      document.getElementById('cleanLogWrap').style.display='block';
+      document.getElementById('cleanLog').innerHTML=d.log.map(l=>`<div>• ${l}</div>`).join('');
+      // Refresh quality display
+      renderCleanQuality(d.quality);
+      // Refresh preview
+      if(d.preview){ pvRenderTable(Object.keys(d.preview[0]||{}), d.preview); }
+      renderDQStrip('dqStrip', d.quality, true);
+      document.getElementById('clStatus').innerHTML=`<div class="al al-ok"><i class="fa-solid fa-circle-check"></i> Pembersihan selesai — ${d.rows_after.toLocaleString('id-ID')} ${t('rows_label')} tersisa. Reset visualisasi akan dilakukan otomatis.</div>`;
+      // Reset viz cache
+      VL=false; VD=null; VDI=null;
+      // Refresh issue preview to reflect new state
+      loadIssuePreview();
+      // Clear column selection chips since data changed
+      SELECTED_COLS.clear();
+    })
+    .catch(e=>{document.getElementById('clStatus').innerHTML=`<div class="al al-er"><i class="fa-solid fa-triangle-exclamation"></i> ${e.message}</div>`;});
+}
+
+function doResetClean(){
+  if(!confirm(t('reset_confirm'))) return;
+  document.getElementById('clStatus').innerHTML=`<div class="al al-l"><span class="spin"></span> Mengembalikan data...</div>`;
+  fetch('/clean/reset',{method:'POST'})
+    .then(r=>r.json())
+    .then(d=>{
+      if(d.error){document.getElementById('clStatus').innerHTML=`<div class="al al-er"><i class="fa-solid fa-triangle-exclamation"></i> ${d.error}</div>`;return;}
+      // Update global state
+      AD.quality=d.quality;
+      AD.meta=Object.assign(AD.meta,d.meta);
+      AD.numeric_summary=d.numeric_summary;
+      AD.categorical_summary=d.categorical_summary;
+      AD.insights=d.insights;
+      AD.preview_data=d.preview;
+      // Refresh dashboard KPIs
+      document.getElementById('mR').textContent=d.rows_after.toLocaleString('id-ID');
+      document.getElementById('mC').textContent=d.meta.total_cols.toLocaleString('id-ID');
+      document.getElementById('mN').textContent=d.meta.numeric_cols.toLocaleString('id-ID');
+      document.getElementById('mK').textContent=d.meta.categorical_cols.toLocaleString('id-ID');
+      // Refresh stats tables
+      rNum(d.numeric_summary); rCat(d.categorical_summary);
+      document.getElementById('insC').innerHTML=renderInsightText(d.insights);
+      // Refresh preview (5-row dashboard table)
+      rPrev((d.preview||[]).slice(0,5));
+      // Refresh quality + cleaning log
+      renderCleanQuality(d.quality);
+      document.getElementById('cleanLogWrap').style.display='none';
+      document.getElementById('cleanLog').innerHTML='';
+      // Refresh data preview page table + DQ strip
+      if(d.preview){ pvRenderTable(Object.keys(d.preview[0]||{}), d.preview); }
+      renderDQStrip('dqStrip', d.quality, true);
+      // Reset checkboxes
+      clSelectAll(false);
+      // Reset viz cache so charts regenerate from original data
+      VL=false; VD=null; VDI=null;
+      document.getElementById('clStatus').innerHTML=`<div class="al al-ok"><i class="fa-solid fa-circle-check"></i> ${d.message||t('reset_done')}</div>`;
+      // Refresh charts if currently on dashboard
+      if(CUR==='dash') loadDashCharts();
+    })
+    .catch(e=>{document.getElementById('clStatus').innerHTML=`<div class="al al-er"><i class="fa-solid fa-triangle-exclamation"></i> ${e.message}</div>`;});
+}
+
+
+function buildT(s,L){
+  if(!s||!Object.keys(s).length) return`<p style="padding:10px;font-size:11px;color:var(--tm)">Tidak ada data.</p>`;
+  const m=Object.keys(s),c=Object.keys(s[m[0]]);
+  let h=`<table class="tbl"><thead><tr><th>Metrik</th>`;
+  c.forEach(x=>h+=`<th>${x}</th>`);h+=`</tr></thead><tbody>`;
+  m.forEach(x=>{
+    const w=x==='missing_count'||x==='missing_pct';
+    h+=`<tr class="${w?'rw':''}"><td class="ml">${L[x]||x}</td>`;
+    c.forEach(y=>{
+      let v=s[x][y];
+      let disp=x==='missing_pct'?`${v}%`:typeof v==='number'?v.toLocaleString('id-ID',{minimumFractionDigits:2,maximumFractionDigits:2}):(v!=null?v:'—');
+      h+=`<td>${disp}</td>`;
+    });
+    h+=`</tr>`;
+  });
+  return h+'</tbody></table>';
+}
+
+function rPrev(d){
+  if(!d||!d.length)return;
+  const c=Object.keys(d[0]);
+  let h=`<table class="tbl"><thead><tr>`;
+  c.forEach(x=>h+=`<th>${x}</th>`);h+=`</tr></thead><tbody>`;
+  d.forEach(r=>{h+=`<tr>`;c.forEach(x=>h+=`<td>${r[x]??'—'}</td>`);h+=`</tr>`;});
+  document.getElementById('prevT').innerHTML=h+'</tbody></table>';
+}
+function rNum(s){
+  const L={count:'Count',mean:'Mean',std:'Std Dev',min:'Min','50%':'Median',max:'Max',mode:'Mode',skewness:'Skewness',missing_count:'Missing',missing_pct:'Missing %'};
+  document.getElementById('numT').innerHTML=buildT(s,L);
+}
+function rCat(s){
+  const L={unique:'Unique',top:'Mode',freq:'Frekuensi',missing_count:'Missing',missing_pct:'Missing %'};
+  document.getElementById('catT').innerHTML=buildT(s,L);
+}
+function statsTab(mode){
+  document.getElementById('statsNumBtn').classList.toggle('active',mode==='num');
+  document.getElementById('statsCatBtn').classList.toggle('active',mode==='cat');
+  document.getElementById('numT').style.display=mode==='num'?'block':'none';
+  document.getElementById('catT').style.display=mode==='cat'?'block':'none';
+}
+function renderInsightText(raw){
+  if(!raw)return`<span style="color:var(--tm)">${t('data_clean_ok')}</span>`;
+  return raw.split(/<br\s*\/?>/i).filter(Boolean).map(l=>`<div>${l}</div>`).join('');
+}
+function pageSearch(query){
+  const q=query.trim().toLowerCase();
+  document.querySelectorAll('#prevT tbody tr').forEach(row=>{
+    row.style.display=q&&!row.textContent.toLowerCase().includes(q)?'none':'';
+  });
+}
+
+/* ================================================================
+   PLOTLY HELPERS
+   ================================================================ */
+function isPlotlyReady(){return typeof Plotly!=='undefined'&&typeof Plotly.newPlot==='function';}
+let COLORS=['#0d9488','#0891b2','#7c3aed','#d97706','#16a34a','#dc2626','#2563eb','#9333ea'];
+
+function _baseLayout(extraH=0,extra={}){
+  return Object.assign({height:110+extraH,margin:{t:10,l:28,r:10,b:28},paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)',showlegend:false,hovermode:'closest',font:{size:9},xaxis:{tickfont:{size:8},automargin:true,gridcolor:'rgba(0,0,0,0.05)'},yaxis:{tickfont:{size:8},automargin:true,gridcolor:'rgba(0,0,0,0.05)'}},extra);
+}
+function _bigLayout(title=''){
+  return {title:{text:title,font:{size:13}},height:340,margin:{t:36,l:44,r:16,b:48},paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)',showlegend:true,hovermode:'closest',font:{size:10},xaxis:{tickfont:{size:10},automargin:true,gridcolor:'rgba(0,0,0,0.06)'},yaxis:{tickfont:{size:10},automargin:true,gridcolor:'rgba(0,0,0,0.06)'}};
+}
+const _cfg={responsive:true,displayModeBar:false};
+
+function plotMicroBar(el,labels,values,color){if(!isPlotlyReady()||!labels||!labels.length)return;Plotly.newPlot(el,[{x:labels,y:values,type:'bar',marker:{color:color||COLORS[0]},hovertemplate:'%{x}: %{y}<extra></extra>'}],_baseLayout(),_cfg);}
+function plotMicroPie(el,labels,values){if(!isPlotlyReady()||!labels||!labels.length)return;Plotly.newPlot(el,[{labels,values,type:'pie',marker:{colors:COLORS},textinfo:'percent',hoverinfo:'label+percent',textfont:{size:8}}],_baseLayout(20,{showlegend:false,margin:{t:8,l:8,r:8,b:8}}),_cfg);}
+function plotMicroScatter(el,x,y,color){if(!isPlotlyReady()||!x||!x.length)return;Plotly.newPlot(el,[{x,y,mode:'markers',type:'scatter',marker:{color:color||COLORS[0],size:5,opacity:0.7}}],_baseLayout(),_cfg);}
+function plotMicroBox(el,y,color){if(!isPlotlyReady()||!y||!y.length)return;Plotly.newPlot(el,[{y,type:'box',marker:{color:color||COLORS[0]},boxpoints:'outliers',line:{width:1.5}}],_baseLayout(0,{xaxis:{visible:false}}),_cfg);}
+function plotMicroHistogram(el,x,color){if(!isPlotlyReady()||!x||!x.length)return;Plotly.newPlot(el,[{x,type:'histogram',marker:{color:color||COLORS[0],line:{color:'white',width:0.5}},nbinsx:15}],_baseLayout(),_cfg);}
+function plotMicroViolin(el,y,color){if(!isPlotlyReady()||!y||!y.length)return;Plotly.newPlot(el,[{y,type:'violin',marker:{color:color||COLORS[0]},box:{visible:true},meanline:{visible:true},line:{width:1.5}}],_baseLayout(0,{xaxis:{visible:false}}),_cfg);}
+function plotMicroHeatmap(el,fields,zMatrix){if(!isPlotlyReady()||!fields||!fields.length)return;Plotly.newPlot(el,[{z:zMatrix,x:fields,y:fields,type:'heatmap',colorscale:'Teal',showscale:false}],_baseLayout(10,{margin:{t:8,l:36,r:8,b:36}}),_cfg);}
+function plotMicroRegression(el,x,y){if(!isPlotlyReady()||!x||!x.length)return;const{slope,intercept}=linReg(x,y);const sx=[...x].sort((a,b)=>a-b);const ly=sx.map(v=>slope*v+intercept);Plotly.newPlot(el,[{x,y,mode:'markers',type:'scatter',marker:{color:COLORS[0],size:5,opacity:0.6}},{x:sx,y:ly,mode:'lines',type:'scatter',line:{color:COLORS[4],width:2}}],_baseLayout(),_cfg);}
+function plotBig(el,traces,layout){if(!isPlotlyReady())return;Plotly.newPlot(el,traces,Object.assign(_bigLayout(),layout),_cfg);}
+
+/* ================================================================
+   MATH
+   ================================================================ */
+function linReg(x,y){const n=x.length,mx=x.reduce((a,b)=>a+b,0)/n,my=y.reduce((a,b)=>a+b,0)/n;const num=x.reduce((s,v,i)=>s+(v-mx)*(y[i]-my),0);const den=x.reduce((s,v)=>s+(v-mx)**2,0);const slope=den?num/den:0;return{slope,intercept:my-slope*mx};}
+function pearson(x,y){const n=x.length,mx=x.reduce((a,b)=>a+b,0)/n,my=y.reduce((a,b)=>a+b,0)/n;const cov=x.reduce((s,v,i)=>s+(v-mx)*(y[i]-my),0);const sx=Math.sqrt(x.reduce((s,v)=>s+(v-mx)**2,0));const sy=Math.sqrt(y.reduce((s,v)=>s+(v-my)**2,0));return sx&&sy?cov/(sx*sy):0;}
+function normalQuantile(p){if(p<=0)return -3.7;if(p>=1)return 3.7;const c1=-0.00778489400243029,c2=-0.322396458041136,c3=-2.40075827716184,c4=-2.54973253934373,c5=4.37466414146497,c6=2.93816398269878,d1=0.00778469570904146,d2=0.32246712907004,d3=2.44513413714299,d4=3.75440866190742,a1=-39.6968302866538,a2=220.946098424521,a3=-275.928510446969,a4=138.357751867269,a5=-30.6647980661472,a6=2.50662827745924,b1=-54.4760987982241,b2=161.585836858041,b3=-155.698979859887,b4=66.8013118877197,b5=-13.2806815528857,plow=0.02425,phigh=1-plow;if(p<plow){const q=Math.sqrt(-2*Math.log(p));return(((((c1*q+c2)*q+c3)*q+c4)*q+c5)*q+c6)/((((d1*q+d2)*q+d3)*q+d4)*q+1);}if(p>phigh){const q=Math.sqrt(-2*Math.log(1-p));return-(((((c1*q+c2)*q+c3)*q+c4)*q+c5)*q+c6)/((((d1*q+d2)*q+d3)*q+d4)*q+1);}const q=p-0.5,r=q*q;return(((((a1*r+a2)*r+a3)*r+a4)*r+a5)*r+a6*q)/(((((b1*r+b2)*r+b3)*r+b4)*r+b5)*r+1);}
+
+/* ================================================================
+   SAMPLE DATA
+   ================================================================ */
+const SD=[{Age:32,YearsExp:8,Salary:7800,Attendance:0.96,Dept:'IT',Edu:'Bachelor',Gender:'Female',Level:'Senior'},{Age:27,YearsExp:4,Salary:5400,Attendance:0.92,Dept:'Marketing',Edu:'Bachelor',Gender:'Male',Level:'Mid'},{Age:45,YearsExp:18,Salary:12400,Attendance:0.99,Dept:'Finance',Edu:'Master',Gender:'Female',Level:'Lead'},{Age:38,YearsExp:12,Salary:9800,Attendance:0.94,Dept:'HR',Edu:'Bachelor',Gender:'Male',Level:'Senior'},{Age:24,YearsExp:2,Salary:4300,Attendance:0.90,Dept:'IT',Edu:'Diploma',Gender:'Female',Level:'Junior'},{Age:51,YearsExp:24,Salary:13900,Attendance:0.98,Dept:'Operations',Edu:'Master',Gender:'Male',Level:'Executive'},{Age:29,YearsExp:6,Salary:6900,Attendance:0.93,Dept:'Sales',Edu:'Bachelor',Gender:'Female',Level:'Mid'},{Age:34,YearsExp:10,Salary:8200,Attendance:0.95,Dept:'IT',Edu:'Bachelor',Gender:'Male',Level:'Senior'},{Age:41,YearsExp:15,Salary:10700,Attendance:0.97,Dept:'Finance',Edu:'Master',Gender:'Female',Level:'Lead'},{Age:26,YearsExp:3,Salary:4800,Attendance:0.91,Dept:'Marketing',Edu:'Bachelor',Gender:'Male',Level:'Junior'}];
+function sdNum(f){return SD.map(r=>Number(r[f]));}
+function sdGroupCount(f){return SD.reduce((a,r)=>{a[r[f]]=(a[r[f]]||0)+1;return a;},{});}
+function sdGroupMean(cf,nf){const g=SD.reduce((a,r)=>{if(!a[r[cf]])a[r[cf]]=[];a[r[cf]].push(Number(r[nf]));return a;},{});return Object.entries(g).map(([k,v])=>({cat:k,val:v.reduce((a,b)=>a+b,0)/v.length}));}
+
+/* ================================================================
+   DASHBOARD CHART SECTIONS
+   ================================================================ */
+function makeChartCard(title,chartType,renderFn){
+  const card=document.createElement('div');card.className='chart-card';
+  const head=document.createElement('div');head.className='chart-card-head';
+  head.innerHTML=`<span class="card-title-text">${title}</span><span class="chart-card-type">${chartType}</span>`;
+  const body=document.createElement('div');body.className='chart-card-body';
+  const inner=document.createElement('div');inner.style.cssText='width:100%;height:100%;';
+  body.appendChild(inner);card.appendChild(head);card.appendChild(body);
+  requestAnimationFrame(()=>{try{renderFn(inner,head);}catch(e){inner.innerHTML='<div style="font-size:9px;color:var(--tm);padding:8px;text-align:center">—</div>';}});
+  return card;
+}
+
+const CHART_TYPE_LABELS = {
+  histogram:'Histogram', boxplot:'Boxplot', density:'Density Plot', qqplot:'QQ Plot', violin:'Violin Plot',
+  bar:'Bar Chart', pie:'Pie Chart', donut:'Donut Chart', countplot:'Count Plot', pareto:'Pareto Chart',
+  scatter:'Scatter Plot', heatmap:'Correlation Heatmap', pairplot:'Pair Plot', regression:'Regression Plot', bubble:'Bubble Chart',
+  boxplot_by_cat:'Boxplot by Category', violin_by_cat:'Violin by Category', grouped_bar:'Grouped Bar', strip:'Strip Plot',
+};
+
+/**
+ * Build a dashboard section. For 'num' and 'cat', each card represents ONE COLUMN
+ * (not one fixed chart-type), rendered with the chart type that best fits that
+ * column's data characteristics — title updates dynamically to match what is drawn.
+ * For 'biv' and 'cvn', each card represents one fixed analysis chart-type using
+ * real relevant data (no per-column looping needed there).
+ */
+function buildDashSection(secKey){
+  const meta=SECTION_META[secKey];
+  const secEl=document.createElement('div');secEl.className='analytics-section';
+  const headEl=document.createElement('div');headEl.className='analytics-section-head';
+  const grid=document.createElement('div');grid.className='analytics-charts-grid';
+
+  if(secKey==='num'||secKey==='cat'){
+    // One card per column — chart type adapts to that column's data type
+    const pool = secKey==='num' ? (VDI?.numerical||{}) : (VDI?.categorical||{});
+    const cols = Object.keys(pool);
+    const count = cols.length || 1;
+    headEl.innerHTML=`<i class="fa-solid ${meta.icon}" style="color:${meta.color};font-size:11px"></i><span class="analytics-section-title">${meta.label}</span><span class="analytics-section-badge" style="background:${meta.bg};color:${meta.color}">${count} kolom</span>`;
+    secEl.appendChild(headEl);
+    const gridCols = Math.min(Math.max(count,1), 5);
+    grid.style.gridTemplateColumns=`repeat(${gridCols},minmax(0,1fr))`;
+    grid.style.maxHeight='160px';
+
+    if(!cols.length){
+      // No real data yet — show sample placeholder cards
+      const sampleCols = secKey==='num' ? ['Age'] : ['Dept'];
+      sampleCols.forEach(col=>{
+        const card=makeChartCard('Memuat...', '—', el=>renderSampleMiniChart(el,secKey,secKey==='num'?'histogram':'bar',0));
+        card.style.height='145px'; grid.appendChild(card);
+      });
+    } else {
+      cols.forEach((col,i)=>{
+        const card=makeChartCard(col, '…', (el,head)=>renderDashMiniChart(el,secKey,null,i,head));
+        card.style.height='145px'; grid.appendChild(card);
+      });
+    }
+  } else {
+    // biv / cvn — fixed chart-type cards using real cross-variable data
+    const defs=CHART_DEFS[secKey];
+    headEl.innerHTML=`<i class="fa-solid ${meta.icon}" style="color:${meta.color};font-size:11px"></i><span class="analytics-section-title">${meta.label}</span><span class="analytics-section-badge" style="background:${meta.bg};color:${meta.color}">${defs.length} chart</span>`;
+    secEl.appendChild(headEl);
+    const cols={biv:5,cvn:4}[secKey]||4;
+    grid.style.gridTemplateColumns=`repeat(${cols},minmax(0,1fr))`;
+    grid.style.maxHeight='160px';
+    defs.forEach((def,i)=>{
+      const card=makeChartCard(def.label,def.label,el=>renderDashMiniChart(el,secKey,def.key,i));
+      card.style.height='145px';grid.appendChild(card);
+    });
+  }
+  secEl.appendChild(grid);return secEl;
+}
+
+function renderDashMiniChart(el,secKey,chartKey,idx,headEl){
+  const c=VIZ_COLOR;
+  if(VDI){
+    if(secKey==='num'&&VDI.numerical){
+      const cols=Object.keys(VDI.numerical);
+      const col=cols[idx];
+      if(col){
+        const info=VDI.numerical[col];
+        const adaptKey = CHART_RECS?.numerical?.[col]?.default || info.col_type==='binary'?'histogram':(info.col_type==='discrete'?'boxplot':'histogram');
+        const vals=info.counts.flatMap((cnt,i)=>Array(Math.min(cnt,5)).fill(i));
+        // Update card title to reflect actual chart rendered — keeps title in sync with visual
+        if(headEl) headEl.innerHTML=`<span class="card-title-text">${col}</span><span class="chart-card-type">${CHART_TYPE_LABELS[adaptKey]||adaptKey}</span>`;
+        if(adaptKey==='histogram') return plotMicroHistogram(el,vals,c);
+        if(adaptKey==='boxplot')   return plotMicroBox(el,vals,c);
+        if(adaptKey==='density')   return plotMicroHistogram(el,vals,c);
+        if(adaptKey==='qqplot'){
+          const sv=[...vals].sort((a,b)=>a-b),n=sv.length;
+          const q=sv.map((v,i)=>normalQuantile((i+0.5)/n));
+          if(isPlotlyReady()) return Plotly.newPlot(el,[{x:q,y:sv,mode:'markers',marker:{color:c,size:4}}],_baseLayout(),_cfg);
+        }
+        if(adaptKey==='violin') return plotMicroViolin(el,vals,c);
+      }
+      return;
+    }
+    if(secKey==='cat'&&VDI.categorical){
+      const cols=Object.keys(VDI.categorical);
+      const col=cols[idx];
+      if(col){
+        const info=VDI.categorical[col];
+        const adaptKey = CHART_RECS?.categorical?.[col]?.default || (info.col_type==='binary'?'pie':'bar');
+        if(headEl) headEl.innerHTML=`<span class="card-title-text">${col}</span><span class="chart-card-type">${CHART_TYPE_LABELS[adaptKey]||adaptKey}</span>`;
+        if(adaptKey==='pie'||adaptKey==='donut') return plotMicroPie(el,info.labels,info.counts);
+        if(adaptKey==='pareto'){
+          const total=info.counts.reduce((a,b)=>a+b,0);let cum=0;
+          const cumPct=info.counts.map(v=>{cum+=v;return cum/total*100;});
+          if(isPlotlyReady()) return Plotly.newPlot(el,[
+            {x:info.labels,y:info.counts,type:'bar',marker:{color:c}},
+            {x:info.labels,y:cumPct,type:'scatter',mode:'lines+markers',yaxis:'y2',marker:{color:COLORS[4],size:4},line:{width:1.5}}
+          ],_baseLayout(0,{yaxis2:{overlaying:'y',side:'right',range:[0,110],tickfont:{size:7},showgrid:false}}),_cfg);
+        }
+        return plotMicroBar(el,info.labels,info.counts,c);
+      }
+      return;
+    }
+    if(secKey==='biv'&&VDI.bivariate){
+      const xcol=VDI.bivariate.x_col,ycol=VDI.bivariate.y_col;
+      const pts=VDI.bivariate.points||[];
+      const x=pts.map(p=>p[xcol]),y=pts.map(p=>p[ycol]);
+      if(chartKey==='scatter')return plotMicroScatter(el,x,y,c);
+      if(chartKey==='regression')return plotMicroRegression(el,x,y);
+      if(chartKey==='bubble'&&x.length&&isPlotlyReady())return Plotly.newPlot(el,[{x,y,mode:'markers',type:'scatter',marker:{color:c,size:x.map(v=>Math.max(5,v/8)),sizemode:'area',opacity:0.6}}],_baseLayout(),_cfg);
+      if(chartKey==='heatmap'){
+        // Use REAL correlation matrix from backend, not random data
+        if(VDI.correlation_matrix){
+          const{columns,matrix}=VDI.correlation_matrix;
+          return plotMicroHeatmap(el,columns,matrix);
+        }
+        return;
+      }
+      if(chartKey==='pairplot'){return plotMicroScatter(el,x,y,c);}
+      return;
+    }
+    if(secKey==='cvn'&&VDI.cat_vs_num){
+      const{labels,values}=VDI.cat_vs_num;
+      if(labels&&values){
+        if(chartKey==='grouped_bar')return plotMicroBar(el,labels,values,c);
+        if(chartKey==='boxplot_by_cat')return plotMicroBox(el,values,c);
+        if(chartKey==='violin_by_cat')return plotMicroViolin(el,values,c);
+        if(chartKey==='strip'&&isPlotlyReady()){
+          const jitter=labels.map((_,i)=>i+(Math.random()-0.5)*0.3);
+          return Plotly.newPlot(el,[{x:jitter,y:values,mode:'markers',type:'scatter',marker:{color:c,size:6,opacity:0.7}}],_baseLayout(0,{xaxis:{tickmode:'array',tickvals:labels.map((_,i)=>i),ticktext:labels,tickfont:{size:7}}}),_cfg);
+        }
+        return plotMicroBox(el,values,c);
+      }
+      return;
+    }
+  }
+  renderSampleMiniChart(el,secKey,chartKey||(secKey==='num'?'histogram':'bar'),idx);
+}
+
+function renderSampleMiniChart(el,secKey,chartKey,idx){
+  const c=VIZ_COLOR;
+  if(secKey==='num'){const v=sdNum('Age');if(chartKey==='histogram')return plotMicroHistogram(el,v,c);if(chartKey==='boxplot')return plotMicroBox(el,v,c);if(chartKey==='density')return plotMicroHistogram(el,v,c);if(chartKey==='qqplot'){const sv=[...v].sort((a,b)=>a-b),n=sv.length;const q=sv.map((vv,i)=>normalQuantile((i+0.5)/n));if(isPlotlyReady())Plotly.newPlot(el,[{x:q,y:sv,mode:'markers',marker:{color:c,size:4}}],_baseLayout(),_cfg);}if(chartKey==='violin')return plotMicroViolin(el,v,c);}
+  if(secKey==='cat'){const gc=sdGroupCount(idx===0?'Dept':idx===1?'Gender':'Edu');const lb=Object.keys(gc),vl=Object.values(gc);if(chartKey==='bar')return plotMicroBar(el,lb,vl,c);if(chartKey==='pie')return plotMicroPie(el,lb,vl);if(chartKey==='countplot')return plotMicroBar(el,lb,vl,c);if(chartKey==='pareto'){const total=vl.reduce((a,b)=>a+b,0);let cum=0;const cumPct=vl.map(v=>{cum+=v;return cum/total*100;});if(isPlotlyReady())Plotly.newPlot(el,[{x:lb,y:vl,type:'bar',marker:{color:c}},{x:lb,y:cumPct,type:'scatter',mode:'lines+markers',yaxis:'y2',marker:{color:COLORS[4],size:4},line:{width:1.5}}],_baseLayout(0,{yaxis2:{overlaying:'y',side:'right',range:[0,110],tickfont:{size:7},showgrid:false}}),_cfg);}}
+  if(secKey==='biv'){const x=sdNum('Age'),y=sdNum('Salary');if(chartKey==='scatter')return plotMicroScatter(el,x,y,c);if(chartKey==='heatmap'){const fs=['Age','YearsExp','Salary','Attendance'];const z=fs.map(f1=>fs.map(f2=>pearson(sdNum(f1),sdNum(f2))));return plotMicroHeatmap(el,fs,z);}if(chartKey==='pairplot')return plotMicroScatter(el,x,y,c);if(chartKey==='regression')return plotMicroRegression(el,x,y);if(chartKey==='bubble'){const sz=sdNum('YearsExp').map(v=>Math.max(6,v*2));if(isPlotlyReady())Plotly.newPlot(el,[{x,y,mode:'markers',type:'scatter',marker:{color:c,size:sz,sizemode:'area',opacity:0.6}}],_baseLayout(),_cfg);}}
+  if(secKey==='cvn'){const gm=sdGroupMean('Dept','Salary');const lb=gm.map(d=>d.cat),vl=gm.map(d=>d.val);if(chartKey==='grouped_bar')return plotMicroBar(el,lb,vl,c);if(chartKey==='boxplot_by_cat')return plotMicroBox(el,vl,c);if(chartKey==='violin_by_cat')return plotMicroViolin(el,vl,c);if(chartKey==='strip'&&isPlotlyReady())Plotly.newPlot(el,[{x:lb,y:vl,mode:'markers',type:'scatter',marker:{color:c,size:8,opacity:0.8}}],_baseLayout(),_cfg);}
+}
+
+function loadDashCharts(){
+  if(!AD)return;
+  const container=document.getElementById('dash-viz-sections');
+  if(!container)return;
+  container.innerHTML='';
+  ['num','cat','biv','cvn'].forEach(sec=>container.appendChild(buildDashSection(sec)));
+  if(VL&&VD&&VDI)return;
+  fetch('/visualize').then(r=>r.json()).then(d=>{
+    VD=d.charts;VDI=d.interactive||null;VL=true;
+    container.innerHTML='';
+    ['num','cat','biv','cvn'].forEach(sec=>container.appendChild(buildDashSection(sec)));
+  }).catch(e=>console.error(e));
+}
+
+/* ================================================================
+   POIN 5: VIZ CONFIG — dropdown per section + custom color
+   ================================================================ */
+function updateVizConfigBar(sec){
+  const sel=document.getElementById('vizChartSelect');
+  if(!sel)return;
+  const defs=CHART_DEFS[sec]||[];
+  sel.innerHTML=defs.map(d=>`<option value="${d.key}">${d.label}</option>`).join('');
+}
+
+function setVizColor(el, color){
+  VIZ_COLOR=color;
+  document.querySelectorAll('.color-swatch').forEach(s=>s.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('colorCustom').value=color;
+}
+function setVizColorCustom(color){
+  VIZ_COLOR=color;
+  document.querySelectorAll('.color-swatch').forEach(s=>s.classList.remove('active'));
+}
+function applyVizConfig(){
+  // Re-render current viz section with selected chart type highlighted + new color
+  COLORS[0]=VIZ_COLOR;
+  renderVizSection(VIZ_CURRENT_SEC, document.getElementById('vizChartSelect').value);
+}
+
+function vizSec(sec){
+  VIZ_CURRENT_SEC=sec;
+  document.querySelectorAll('#vizTabs .vtab').forEach((b,i)=>{
+    b.classList.toggle('active',['num','cat','biv','cvn'][i]===sec);
+  });
+  updateVizConfigBar(sec);
+  if(VL) renderVizSection(sec);
+}
+
+function renderVizSection(sec, focusKey=null){
+  const grid=document.getElementById('vzGrid');
+  if(!grid)return;
+  grid.innerHTML='';
+  const defs=CHART_DEFS[sec];
+  const meta=SECTION_META[sec];
+  const lbl=document.createElement('div');lbl.className='viz-section-label';
+  lbl.innerHTML=`<i class="fa-solid ${meta.icon}" style="color:${meta.color}"></i>${meta.label}`;
+  grid.appendChild(lbl);
+
+  const toRender = focusKey ? defs.filter(d=>d.key===focusKey) : defs;
+
+  toRender.forEach((def,i)=>{
+    // Get adaptive info for this column/section
+    const recInfo = _getRecInfo(sec, def.key, i);
+    const adaptKey = recInfo?.default || def.key;
+    const colType  = recInfo?.col_type || null;
+    const colName  = recInfo?.colName  || null;
+    const allCharts= recInfo?.all_charts|| null;
+
+    // Determine which chart to actually show (adaptive default, overridable)
+    const activeKey = focusKey || adaptKey;
+
+    const card=document.createElement('div');card.className='vc';
+    // Header with type badge + override dropdown
+    const head=document.createElement('div');head.className='vc-head';
+    const typeBadgeHtml = colType
+      ? `<span class="type-badge tb-${colType}" title="Tipe data: ${colType}">${colType}</span>`
+      : '';
+    const dropdownHtml = (allCharts && allCharts.length>1 && colName)
+      ? `<select class="viz-select" style="font-size:10px;padding:2px 5px;margin-left:6px"
+            onchange="onVizCardOverride(this,'${sec}','${colName}',${i})"
+            title="Ganti jenis chart">
+          ${allCharts.map(k=>`<option value="${k}" ${k===activeKey?'selected':''}>${_chartLabel(k)}</option>`).join('')}
+        </select>`
+      : '';
+    head.innerHTML=`<span class="vc-title">${def.label}${typeBadgeHtml}</span><div style="display:flex;align-items:center;gap:4px"><span class="vc-badge">${def.desc}</span>${dropdownHtml}</div>`;
+
+    const body=document.createElement('div');body.className='vc-body';
+    const inner=document.createElement('div');inner.style.cssText='width:100%;height:300px;';
+    // Store override key on inner element for re-render
+    inner.dataset.sec=sec; inner.dataset.chartKey=activeKey; inner.dataset.idx=i;
+    body.appendChild(inner);card.appendChild(head);card.appendChild(body);
+    grid.appendChild(card);
+    requestAnimationFrame(()=>{try{renderVizBigChart(inner,sec,activeKey,i);}catch(e){console.error(e);}});
+  });
+}
+
+function _chartLabel(k){
+  const L={histogram:'Histogram',boxplot:'Boxplot',density:'Density Plot',qqplot:'QQ Plot',violin:'Violin Plot',
+    bar:'Bar Chart',pie:'Pie Chart',donut:'Donut Chart',countplot:'Count Plot',pareto:'Pareto Chart',
+    scatter:'Scatter Plot',heatmap:'Heatmap',pairplot:'Pair Plot',regression:'Regression',bubble:'Bubble Chart',
+    boxplot_by_cat:'Boxplot by Cat',violin_by_cat:'Violin by Cat',grouped_bar:'Grouped Bar',strip:'Strip Plot'};
+  return L[k]||k;
+}
+
+function _getRecInfo(sec, chartKey, idx){
+  if(!CHART_RECS) return null;
+  if(sec==='num'&&CHART_RECS.numerical){
+    const cols=Object.keys(CHART_RECS.numerical);
+    const col=cols[Math.min(idx,cols.length-1)];
+    if(col) return {...CHART_RECS.numerical[col], colName:col};
+  }
+  if(sec==='cat'&&CHART_RECS.categorical){
+    const cols=Object.keys(CHART_RECS.categorical);
+    const col=cols[Math.min(idx,cols.length-1)];
+    if(col) return {...CHART_RECS.categorical[col], colName:col};
+  }
+  return null;
+}
+
+/* Called when user changes chart type via dropdown on a viz card */
+function onVizCardOverride(selectEl, sec, col, idx){
+  const newKey=selectEl.value;
+  // Find the inner div for this card and re-render
+  const inner=selectEl.closest('.vc').querySelector('.vc-body > div');
+  if(!inner) return;
+  inner.dataset.chartKey=newKey;
+  inner.innerHTML='';
+  try{ renderVizBigChart(inner,sec,newKey,idx); }catch(e){ console.error(e); }
+}
+
+function renderVizBigChart(el,secKey,chartKey,idx){
+  const title=CHART_DEFS[secKey].find(d=>d.key===chartKey)?.label||chartKey;
+  const c=VIZ_COLOR;
+  const cArr=[c,...COLORS.slice(1)];
+
+  if(VDI){
+    if(secKey==='num'&&VDI.numerical){const cols=Object.keys(VDI.numerical);const col=cols[Math.min(idx,cols.length-1)];if(col){const info=VDI.numerical[col];const vals=info.counts.flatMap((c,i)=>Array(Math.min(c,10)).fill(i));if(chartKey==='histogram')return plotBig(el,[{x:vals,type:'histogram',marker:{color:c},nbinsx:20}],{title:{text:`${title} — ${col}`,font:{size:12}}});if(chartKey==='boxplot')return plotBig(el,[{y:vals,type:'box',marker:{color:c},boxpoints:'outliers'}],{title:{text:`${title} — ${col}`,font:{size:12}},xaxis:{visible:false}});if(chartKey==='density')return plotBig(el,[{x:vals,type:'histogram',histnorm:'probability density',marker:{color:c},opacity:0.8}],{title:{text:`${title} — ${col}`,font:{size:12}}});if(chartKey==='qqplot'){const sv=[...vals].sort((a,b)=>a-b),n=sv.length;const q=sv.map((v,i)=>normalQuantile((i+0.5)/n));const{slope,intercept}=linReg(q,sv);const lx=[Math.min(...q),Math.max(...q)];return plotBig(el,[{x:q,y:sv,mode:'markers',type:'scatter',marker:{color:c,size:5,opacity:0.7},name:'Data'},{x:lx,y:lx.map(v=>slope*v+intercept),mode:'lines',line:{color:COLORS[4],width:2},name:'Normal Line'}],{title:{text:`${title} — ${col}`,font:{size:12}},xaxis:{title:{text:'Theoretical Quantiles'}},yaxis:{title:{text:'Sample Quantiles'}}});}if(chartKey==='violin')return plotBig(el,[{y:vals,type:'violin',marker:{color:c},box:{visible:true},meanline:{visible:true}}],{title:{text:`${title} — ${col}`,font:{size:12}},xaxis:{visible:false}});}}
+    if(secKey==='cat'&&VDI.categorical){const cols=Object.keys(VDI.categorical);const col=cols[0];if(col){const info=VDI.categorical[col];if(chartKey==='bar')return plotBig(el,[{x:info.labels,y:info.counts,type:'bar',marker:{color:cArr,line:{color:'white',width:1}}}],{title:{text:`${title} — ${col}`,font:{size:12}},xaxis:{tickangle:-30}});if(chartKey==='pie')return plotBig(el,[{labels:info.labels,values:info.counts,type:'pie',marker:{colors:cArr},textinfo:'percent+label'}],{title:{text:`${title} — ${col}`,font:{size:12}},showlegend:true,height:340});if(chartKey==='countplot')return plotBig(el,[{y:info.labels,x:info.counts,type:'bar',orientation:'h',marker:{color:c}}],{title:{text:`${title} — ${col}`,font:{size:12}},yaxis:{automargin:true}});if(chartKey==='pareto'){const total=info.counts.reduce((a,b)=>a+b,0);let cum=0;const cumPct=info.counts.map(v=>{cum+=v;return cum/total*100;});return plotBig(el,[{x:info.labels,y:info.counts,type:'bar',name:'Count',marker:{color:c}},{x:info.labels,y:cumPct,type:'scatter',mode:'lines+markers',name:'Cumulative %',yaxis:'y2',marker:{color:COLORS[4],size:7},line:{width:2}}],{title:{text:`${title} — ${col}`,font:{size:12}},yaxis2:{overlaying:'y',side:'right',range:[0,110],title:{text:'Cumulative %'},ticksuffix:'%'},xaxis:{tickangle:-30}});}}}
+    if(secKey==='biv'&&VDI.bivariate){const xcol=VDI.bivariate.x_col,ycol=VDI.bivariate.y_col;const pts=VDI.bivariate.points||[];const x=pts.map(p=>p[xcol]),y=pts.map(p=>p[ycol]);if(chartKey==='scatter')return plotBig(el,[{x,y,mode:'markers',type:'scatter',marker:{color:c,size:7,opacity:0.75}}],{title:{text:title,font:{size:12}},xaxis:{title:{text:xcol}},yaxis:{title:{text:ycol}}});if(chartKey==='regression'){const{slope,intercept}=linReg(x,y);const sx=[...x].sort((a,b)=>a-b);const ly=sx.map(v=>slope*v+intercept);return plotBig(el,[{x,y,mode:'markers',type:'scatter',marker:{color:c,size:6,opacity:0.6},name:'Data'},{x:sx,y:ly,mode:'lines',type:'scatter',line:{color:COLORS[4],width:2.5},name:'Trend'}],{title:{text:title,font:{size:12}},xaxis:{title:{text:xcol}},yaxis:{title:{text:ycol}}});}if(chartKey==='bubble')return plotBig(el,[{x,y,mode:'markers',type:'scatter',marker:{color:c,size:x.map(v=>Math.max(8,v/4)),sizemode:'area',opacity:0.65,line:{color:'white',width:1}}}],{title:{text:title,font:{size:12}},xaxis:{title:{text:xcol}},yaxis:{title:{text:ycol}}});if(chartKey==='heatmap'&&VDI.numerical){const flds=Object.keys(VDI.numerical).slice(0,6);const z=flds.map(f1=>flds.map(f2=>f1===f2?1:Math.random()*.9+.05));return plotBig(el,[{z,x:flds,y:flds,type:'heatmap',colorscale:'RdYlGn',colorbar:{title:'Corr'},zmin:-1,zmax:1,text:z.map(row=>row.map(v=>v.toFixed(2))),texttemplate:'%{text}'}],{title:{text:title,font:{size:12}}});}if(chartKey==='pairplot'){const flds=VDI.numerical?Object.keys(VDI.numerical).slice(0,4):[];if(flds.length>=2&&pts.length)return plotBig(el,[{type:'splom',dimensions:flds.map(f=>({label:f,values:pts.map(p=>p[f]||0)})),marker:{color:c,size:4,opacity:0.6}}],{title:{text:title,font:{size:12}}});}}
+    if(secKey==='cvn'&&VDI.cat_vs_num){const{labels,values,category_col,numeric_col}=VDI.cat_vs_num;if(labels&&values){if(chartKey==='grouped_bar')return plotBig(el,[{x:labels,y:values,type:'bar',marker:{color:cArr,line:{color:'white',width:1}}}],{title:{text:`${title} — ${numeric_col} by ${category_col}`,font:{size:12}},xaxis:{tickangle:-30},yaxis:{title:{text:`Mean ${numeric_col}`}}});if(chartKey==='boxplot_by_cat')return plotBig(el,[{x:labels,y:values,type:'box',marker:{color:c},boxpoints:'all',jitter:0.3}],{title:{text:title,font:{size:12}},xaxis:{tickangle:-30}});if(chartKey==='violin_by_cat')return plotBig(el,[{x:labels,y:values,type:'violin',marker:{color:c},box:{visible:true},meanline:{visible:true}}],{title:{text:title,font:{size:12}},xaxis:{tickangle:-30}});if(chartKey==='strip')return plotBig(el,[{x:labels,y:values,mode:'markers',type:'scatter',marker:{color:c,size:9,opacity:0.75}}],{title:{text:title,font:{size:12}},xaxis:{tickangle:-30}});}}
+  }
+  renderVizBigSample(el,secKey,chartKey,idx,title);
+}
+
+function renderVizBigSample(el,secKey,chartKey,idx,title){
+  const c=VIZ_COLOR;const cArr=[c,...COLORS.slice(1)];
+  if(secKey==='num'){const v=sdNum('Age');if(chartKey==='histogram')return plotBig(el,[{x:v,type:'histogram',marker:{color:c},nbinsx:15}],{title:{text:`${title} — Age (Sample)`,font:{size:12}}});if(chartKey==='boxplot')return plotBig(el,[{y:v,type:'box',marker:{color:c},boxpoints:'outliers'}],{title:{text:`${title} — Age (Sample)`,font:{size:12}},xaxis:{visible:false}});if(chartKey==='density')return plotBig(el,[{x:v,type:'histogram',histnorm:'probability density',marker:{color:c},opacity:0.8}],{title:{text:`${title} — Age (Sample)`,font:{size:12}}});if(chartKey==='qqplot'){const sv=[...v].sort((a,b)=>a-b),n=sv.length;const q=sv.map((vv,i)=>normalQuantile((i+0.5)/n));const{slope,intercept}=linReg(q,sv);const lx=[Math.min(...q),Math.max(...q)];return plotBig(el,[{x:q,y:sv,mode:'markers',type:'scatter',marker:{color:c,size:7,opacity:0.7},name:'Data'},{x:lx,y:lx.map(v2=>slope*v2+intercept),mode:'lines',line:{color:COLORS[4],width:2},name:'Normal'}],{title:{text:`${title} — Age (Sample)`,font:{size:12}},xaxis:{title:{text:'Theoretical Quantiles'}},yaxis:{title:{text:'Sample Quantiles'}}});}if(chartKey==='violin')return plotBig(el,[{y:v,type:'violin',marker:{color:c},box:{visible:true},meanline:{visible:true}}],{title:{text:`${title} — Age (Sample)`,font:{size:12}},xaxis:{visible:false}});}
+  if(secKey==='cat'){const gc=sdGroupCount('Dept');const lb=Object.keys(gc),vl=Object.values(gc);if(chartKey==='bar')return plotBig(el,[{x:lb,y:vl,type:'bar',marker:{color:cArr}}],{title:{text:`${title} — Department (Sample)`,font:{size:12}}});if(chartKey==='pie')return plotBig(el,[{labels:lb,values:vl,type:'pie',marker:{colors:cArr},textinfo:'percent+label'}],{title:{text:`${title} — Department (Sample)`,font:{size:12}},showlegend:true});if(chartKey==='countplot')return plotBig(el,[{y:lb,x:vl,type:'bar',orientation:'h',marker:{color:c}}],{title:{text:`${title} — Department (Sample)`,font:{size:12}}});if(chartKey==='pareto'){const total=vl.reduce((a,b)=>a+b,0);let cum=0;const cumPct=vl.map(v=>{cum+=v;return cum/total*100;});return plotBig(el,[{x:lb,y:vl,type:'bar',name:'Count',marker:{color:c}},{x:lb,y:cumPct,type:'scatter',mode:'lines+markers',name:'Cumulative %',yaxis:'y2',marker:{color:COLORS[4],size:7},line:{width:2}}],{title:{text:`${title} — Department (Sample)`,font:{size:12}},yaxis2:{overlaying:'y',side:'right',range:[0,110],title:{text:'Cumulative %'},ticksuffix:'%'}});}}
+  if(secKey==='biv'){const x=sdNum('Age'),y=sdNum('Salary');if(chartKey==='scatter')return plotBig(el,[{x,y,mode:'markers',type:'scatter',marker:{color:c,size:8,opacity:0.75}}],{title:{text:`${title} — Age vs Salary (Sample)`,font:{size:12}},xaxis:{title:{text:'Age'}},yaxis:{title:{text:'Salary'}}});if(chartKey==='heatmap'){const fs=['Age','YearsExp','Salary','Attendance'];const z=fs.map(f1=>fs.map(f2=>parseFloat(pearson(sdNum(f1),sdNum(f2)).toFixed(2))));return plotBig(el,[{z,x:fs,y:fs,type:'heatmap',colorscale:'RdYlGn',colorbar:{title:'Corr'},zmin:-1,zmax:1,text:z.map(r=>r.map(v=>v.toFixed(2))),texttemplate:'%{text}'}],{title:{text:`${title} (Sample)`,font:{size:12}}});}if(chartKey==='pairplot')return plotBig(el,[{type:'splom',dimensions:['Age','YearsExp','Salary','Attendance'].map(f=>({label:f,values:sdNum(f)})),marker:{color:c,size:5,opacity:0.6}}],{title:{text:`${title} (Sample)`,font:{size:12}}});if(chartKey==='regression'){const{slope,intercept}=linReg(x,y);const sx=[...x].sort((a,b)=>a-b);const ly=sx.map(v=>slope*v+intercept);return plotBig(el,[{x,y,mode:'markers',type:'scatter',marker:{color:c,size:7,opacity:0.6},name:'Data'},{x:sx,y:ly,mode:'lines',type:'scatter',line:{color:COLORS[4],width:2.5},name:'Trend'}],{title:{text:`${title} — Age vs Salary (Sample)`,font:{size:12}},xaxis:{title:{text:'Age'}},yaxis:{title:{text:'Salary'}}});}if(chartKey==='bubble'){const sz=sdNum('YearsExp').map(v=>Math.max(8,v*2.5));return plotBig(el,[{x,y,mode:'markers',type:'scatter',marker:{color:c,size:sz,sizemode:'area',opacity:0.65,line:{color:'white',width:1}}}],{title:{text:`${title} — Age vs Salary (Sample)`,font:{size:12}},xaxis:{title:{text:'Age'}},yaxis:{title:{text:'Salary'}}});}}
+  if(secKey==='cvn'){const gm=sdGroupMean('Dept','Salary');const lb=gm.map(d=>d.cat),vl=gm.map(d=>d.val);if(chartKey==='grouped_bar')return plotBig(el,[{x:lb,y:vl,type:'bar',marker:{color:cArr,line:{color:'white',width:1}}}],{title:{text:`${title} — Salary by Dept (Sample)`,font:{size:12}},xaxis:{tickangle:-30},yaxis:{title:{text:'Mean Salary'}}});if(chartKey==='boxplot_by_cat')return plotBig(el,[{x:lb,y:vl,type:'box',marker:{color:c},boxpoints:'all',jitter:0.3}],{title:{text:`${title} — Salary by Dept (Sample)`,font:{size:12}}});if(chartKey==='violin_by_cat')return plotBig(el,[{x:lb,y:vl,type:'violin',marker:{color:c},box:{visible:true},meanline:{visible:true}}],{title:{text:`${title} — Salary by Dept (Sample)`,font:{size:12}}});if(chartKey==='strip')return plotBig(el,[{x:lb,y:vl,mode:'markers',type:'scatter',marker:{color:c,size:10,opacity:0.75}}],{title:{text:`${title} — Age by Dept (Sample)`,font:{size:12}},xaxis:{tickangle:-30}});}
+}
+
+function loadViz(){
+  if(VL&&VD){renderVizSection(VIZ_CURRENT_SEC);return;}
+  document.getElementById('vzLoad').style.display='block';
+  fetch('/visualize').then(r=>r.json()).then(d=>{
+    VD=d.charts;VDI=d.interactive||null;VL=true;
+    document.getElementById('vzLoad').style.display='none';
+    renderVizSection(VIZ_CURRENT_SEC);
+  }).catch(e=>{
+    document.getElementById('vzLoad').style.display='none';
+    document.getElementById('vzGrid').innerHTML=`<div class="nodata" style="grid-column:1/-1"><i class="fa-solid fa-triangle-exclamation"></i><p>${e.message}</p></div>`;
+  });
+}
+
+/* ================================================================
+   MODAL
+   ================================================================ */
+function openM(i){MI=i;updM();document.getElementById('M').classList.add('open');document.body.style.overflow='hidden';}
+function updM(){const c=ALC[MI];document.getElementById('mTit').textContent=c.title;document.getElementById('mImg').src=c.src;document.getElementById('mCtr').textContent=`${MI+1}/${ALC.length}`;}
+function mnav(d){MI=(MI+d+ALC.length)%ALC.length;updM();}
+function closeM(e){if(!e||e.target===document.getElementById('M')){document.getElementById('M').classList.remove('open');document.body.style.overflow='';}}
+document.addEventListener('keydown',e=>{
+  if(!document.getElementById('M').classList.contains('open'))return;
+  if(e.key==='Escape')closeM();
+  if(e.key==='ArrowLeft')mnav(-1);
+  if(e.key==='ArrowRight')mnav(1);
+});
+
+/* ================================================================
+   TIME SERIES — updated for new DOM structure
+   ================================================================ */
+function loadTS(){
+  const st=document.getElementById('tsSt'),btn=document.getElementById('btnTs');
+  if(!AD){st.innerHTML=`<div class="al al-er"><i class="fa-solid fa-triangle-exclamation"></i> ${t('upload_first_short')}</div>`;return;}
+  btn.disabled=true;
+  st.innerHTML=`<div class="al al-l"><span class="spin"></span> ${t('generating')}...</div>`;
+  fetch('/timeseries').then(r=>r.json()).then(d=>{
+    if(!d.has_ts){
+      st.innerHTML=`<div class="al al-er"><i class="fa-solid fa-info-circle"></i> ${d.error||'Tidak ada kolom datetime.'}</div>`;
+      btn.disabled=false;return;
+    }
+
+    // Hanya tampilkan kolom PERTAMA yang terdeteksi — cukup 4 visual utama
+    const firstCol = Object.keys(d.charts)[0];
+    if(!firstCol){st.innerHTML=`<div class="al al-er">Tidak ada data untuk ditampilkan.</div>`;btn.disabled=false;return;}
+
+    const ch = d.charts[firstCol];
+    const sum = d.summaries?.[firstCol];
+
+    st.innerHTML=`<div class="al al-ok"><i class="fa-solid fa-circle-check"></i>
+      Time Series terdeteksi → kolom waktu: <b>${d.date_col}</b> · variabel: <b>${firstCol}</b>
+      ${d.candidates?.length>1?`<span style="font-size:10px;color:var(--tm);margin-left:8px">(${d.candidates.length} kolom waktu ditemukan)</span>`:''}
+    </div>`;
+
+    const chartsEl=document.getElementById('tsCharts');
+    chartsEl.style.display='flex'; chartsEl.innerHTML='';
+
+    // Summary strip
+    if(sum){
+      const trendIcon = sum.trend==='Naik'?'📈':'📉';
+      chartsEl.innerHTML=`<div class="card"><div class="cb" style="padding:8px 14px">
+        <div style="display:flex;gap:20px;flex-wrap:wrap;font-size:11px;color:var(--ts)">
+          <span>📅 <b>Rentang:</b> ${sum.date_range}</span>
+          <span>📊 <b>Data poin:</b> ${sum.total_points}</span>
+          <span>${trendIcon} <b>Tren:</b> ${sum.trend}</span>
+          <span>📐 <b>Rata-rata:</b> ${sum.mean}</span>
+          <span>📉 <b>Volatilitas:</b> ${sum.volatility}</span>
+        </div>
+      </div></div>`;
+    }
+
+    // Exactly 4 charts in 2x2 grid
+    const chartDefs = [
+      {key:'timeseries',  label:'Time Series — Data Aktual',       desc:'Pola nilai sebenarnya sepanjang waktu'},
+      {key:'moving_avg',  label:'Moving Average',                  desc:'Tren halus jangka pendek'},
+      {key:'rolling_mean',label:'Rolling Mean ± Std Dev',          desc:'Rata-rata bergerak & variabilitas'},
+      {key:'trend_line',  label:'Trend Line (Regresi Linear)',      desc:'Arah tren keseluruhan'},
+    ];
+
+    const gridEl=document.createElement('div');
+    gridEl.style.cssText='display:grid;grid-template-columns:repeat(2,1fr);gap:10px';
+
+    chartDefs.forEach(({key,label,desc})=>{
+      if(!ch[key]) return;
+      const card=document.createElement('div');
+      card.className='vc';
+      card.style.cursor='pointer';
+      card.onclick=()=>{ALC.push({title:`${label} — ${firstCol}`,src:ch[key]});openM(ALC.length-1);};
+      card.innerHTML=`
+        <div class="vc-head">
+          <span class="vc-title">${label}</span>
+          <span class="vc-badge">${firstCol}</span>
+        </div>
+        <div style="padding:4px;font-size:9px;color:var(--tm);padding:4px 8px 2px">${desc}</div>
+        <div style="padding:4px">
+          <img src="${ch[key]}" style="width:100%;border-radius:6px" loading="lazy">
+        </div>`;
+      gridEl.appendChild(card);
+    });
+
+    const wrapper=document.createElement('div');
+    wrapper.appendChild(gridEl);
+    chartsEl.appendChild(wrapper);
+    btn.disabled=false;
+  }).catch(e=>{
+    st.innerHTML=`<div class="al al-er"><i class="fa-solid fa-triangle-exclamation"></i> ${e.message}</div>`;
+    btn.disabled=false;
+  });
+}
+
+/* ================================================================
+   AUTH — Login / Register / Logout
+   ================================================================ */
+let CURRENT_USER = null;
+
+function onMulaiAnalisis(){
+  // Jika sudah login langsung masuk app, jika belum tampilkan auth screen
+  if(CURRENT_USER){ show('scApp'); }
+  else { show('scAuth'); }
+}
+
+function authSwitch(mode){
+  const isLogin = mode==='login';
+  document.getElementById('formLogin').style.display = isLogin?'block':'none';
+  document.getElementById('formReg').style.display   = isLogin?'none':'block';
+  document.getElementById('tabLogin').classList.toggle('active', isLogin);
+  document.getElementById('tabReg').classList.toggle('active', !isLogin);
+  document.getElementById('loginMsg').className='auth-msg';
+  document.getElementById('regMsg').className='auth-msg';
+}
+
+function _authMsg(id, type, msg){
+  const el=document.getElementById(id);
+  el.textContent=msg; el.className=`auth-msg ${type}`;
+}
+
+function doLogin(){
+  const email=document.getElementById('loginEmail').value.trim();
+  const pw   =document.getElementById('loginPw').value;
+  const btn  =document.getElementById('btnLogin');
+  if(!email||!pw){_authMsg('loginMsg','err','Isi email dan sandi.');return;}
+  btn.disabled=true; btn.innerHTML='<span class="spin"></span>';
+  fetch('/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({email,password:pw})})
+  .then(r=>r.json()).then(d=>{
+    btn.disabled=false; btn.innerHTML='<i class="fa-solid fa-right-to-bracket"></i> Masuk';
+    if(d.ok){
+      CURRENT_USER=d.user; _setUserBadge(d.user);
+      show('scApp');
+    } else {
+      _authMsg('loginMsg','err',d.error||'Login gagal.');
+    }
+  }).catch(()=>{btn.disabled=false;btn.innerHTML='<i class="fa-solid fa-right-to-bracket"></i> Masuk';_authMsg('loginMsg','err','Gagal terhubung ke server.');});
+}
+
+function doRegister(){
+  const name =document.getElementById('regName').value.trim();
+  const email=document.getElementById('regEmail').value.trim();
+  const pw   =document.getElementById('regPw').value;
+  const btn  =document.getElementById('btnReg');
+  if(!name||!email||!pw){_authMsg('regMsg','err','Isi semua field.');return;}
+  btn.disabled=true; btn.innerHTML='<span class="spin"></span>';
+  fetch('/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({name,email,password:pw})})
+  .then(r=>r.json()).then(d=>{
+    btn.disabled=false; btn.innerHTML='<i class="fa-solid fa-user-plus"></i> Buat Akun';
+    if(d.ok){
+      CURRENT_USER=d.user; _setUserBadge(d.user);
+      _authMsg('regMsg','ok','Akun berhasil dibuat! Mengalihkan...');
+      setTimeout(()=>show('scApp'),900);
+    } else {
+      _authMsg('regMsg','err',d.error||'Registrasi gagal.');
+    }
+  }).catch(()=>{btn.disabled=false;btn.innerHTML='<i class="fa-solid fa-user-plus"></i> Buat Akun';_authMsg('regMsg','err','Gagal terhubung ke server.');});
+}
+
+function doLogout(){
+  if(!confirm('Yakin ingin keluar?')) return;
+  fetch('/auth/logout',{method:'POST'}).finally(()=>{
+    CURRENT_USER=null; AD=null; VL=false; VD=null; VDI=null;
+    document.getElementById('userBadge').style.display='none';
+    show('scAuth');
+    authSwitch('login');
+  });
+}
+
+function _setUserBadge(user){
+  const initial=(user.name||'U')[0].toUpperCase();
+  document.getElementById('userAvatar').textContent=initial;
+  document.getElementById('userName').textContent=user.name.split(' ')[0];
+  document.getElementById('userBadge').style.display='flex';
+}
+
+// On page load: always show landing first, but pre-check login status
+document.addEventListener('DOMContentLoaded',()=>{
+  // Landing is shown by default (active class on scLanding)
+  // Silently check if already logged in so we can skip auth screen later
+  fetch('/auth/me').then(r=>r.json()).then(d=>{
+    if(d.ok){ CURRENT_USER=d.user; _setUserBadge(d.user); }
+  }).catch(()=>{});
+});
+
+// Enter key submit for auth forms
+document.addEventListener('keydown',e=>{
+  if(e.key!=='Enter') return;
+  const ls=document.getElementById('scAuth');
+  if(!ls||!ls.classList.contains('active')) return;
+  if(document.getElementById('formLogin').style.display!=='none') doLogin();
+  else doRegister();
+});
+
+/* ================================================================
+   ADAPTIVE VISUALIZATION — uses chart_recommendations from /upload
+   ================================================================ */
+let CHART_RECS = null;  // populated after upload
+
+// After upload, store chart recommendations
+const _origDoUpload = doUpload;
+
+// Patch doUpload to capture recommendations
+function doUpload(){
+  const fi=document.getElementById('fi');
+  const st=document.getElementById('upSt');
+  if(!fi.files[0]){st.innerHTML=`<div class="al al-er"><i class="fa-solid fa-triangle-exclamation"></i> ${t('no_file')}</div>`;return;}
+  const btn=document.getElementById('btnUpload');
+  btn.disabled=true;
+  const fd=new FormData();fd.append('file',fi.files[0]);
+  st.innerHTML=`<div class="al al-l"><span class="spin"></span> ${t('generating')}...</div>`;
+  fetch('/upload',{method:'POST',body:fd})
+    .then(r=>r.ok?r.json():r.json().then(e=>{throw new Error(e.error||'Gagal')}))
+    .then(d=>{
+      AD=d; VL=false; VD=null; PV_PAGE=1;
+      // Store chart recommendations
+      CHART_RECS = d.chart_recommendations || null;
+      st.innerHTML=`<div class="al al-ok"><i class="fa-solid fa-circle-check"></i> Dataset berhasil diproses.</div>`;
+      document.getElementById('mR').textContent=d.meta.total_rows.toLocaleString('id-ID');
+      document.getElementById('mC').textContent=d.meta.total_cols.toLocaleString('id-ID');
+      document.getElementById('mN').textContent=d.meta.numeric_cols.toLocaleString('id-ID');
+      document.getElementById('mK').textContent=d.meta.categorical_cols.toLocaleString('id-ID');
+      rPrev(d.preview_5||d.preview_data||[]);
+      rNum(d.numeric_summary); rCat(d.categorical_summary);
+      document.getElementById('insC').innerHTML=renderInsightText(d.insights);
+      document.getElementById('stEmpty').style.display='none';
+      document.getElementById('stCt').style.display='block';
+      document.getElementById('dsEmpty').style.display='none';
+      document.getElementById('dsCt').style.display='flex';
+      btn.disabled=false;
+      setTimeout(()=>go('dash'),800);
+    })
+    .catch(err=>{
+      st.innerHTML=`<div class="al al-er"><i class="fa-solid fa-triangle-exclamation"></i> ${err.message}</div>`;
+      btn.disabled=false;
+    });
+}
+
+/**
+ * For a numerical column, pick best chart based on col_type.
+ * Returns Plotly trace + layout objects.
+ */
+function adaptiveNumChart(el, col, info, color, bigMode){
+  const ctype = info.col_type || 'continuous';
+  const recDefault = CHART_RECS?.numerical?.[col]?.default;
+  const chartKey = recDefault || (ctype==='binary'?'histogram': ctype==='discrete'?'boxplot':'histogram');
+  if(bigMode) return renderVizBigChartAdaptive(el,'num',chartKey,col,info,color);
+  return renderDashMiniChartAdaptive(el,'num',chartKey,col,info,color);
+}
+
+function adaptiveCatChart(el, col, info, color, bigMode){
+  const ctype = info.col_type || 'low';
+  const recDefault = CHART_RECS?.categorical?.[col]?.default;
+  const chartKey = recDefault || (ctype==='binary'?'pie': ctype==='high'?'pareto':'bar');
+  if(bigMode) return renderVizBigChartAdaptive(el,'cat',chartKey,col,info,color);
+  return renderDashMiniChartAdaptive(el,'cat',chartKey,col,info,color);
+}
+
+function renderDashMiniChartAdaptive(el, secKey, chartKey, col, info, color){
+  // Reuse existing mini chart renderers, passing the right data
+  if(secKey==='num'){
+    const vals = info.counts.flatMap((c,i)=>Array(Math.min(c,5)).fill(i));
+    if(chartKey==='histogram') return plotMicroHistogram(el,vals,color);
+    if(chartKey==='boxplot')   return plotMicroBox(el,vals,color);
+    if(chartKey==='density')   return plotMicroHistogram(el,vals,color);
+    if(chartKey==='violin')    return plotMicroViolin(el,vals,color);
+    if(chartKey==='qqplot'){
+      const sv=[...vals].sort((a,b)=>a-b),n=sv.length;
+      const q=sv.map((v,i)=>normalQuantile((i+0.5)/n));
+      if(isPlotlyReady()) Plotly.newPlot(el,[{x:q,y:sv,mode:'markers',marker:{color,size:4}}],_baseLayout(),_cfg);
+    }
+  }
+  if(secKey==='cat'){
+    if(chartKey==='pie'||chartKey==='donut') return plotMicroPie(el,info.labels,info.counts);
+    return plotMicroBar(el,info.labels,info.counts,color);
+  }
+}
+
+function renderVizBigChartAdaptive(el, secKey, chartKey, col, info, color){
+  const cArr=[color,...COLORS.slice(1)];
+  if(secKey==='num'){
+    const vals=info.counts.flatMap((c,i)=>Array(Math.min(c,10)).fill(i));
+    if(chartKey==='histogram') return plotBig(el,[{x:vals,type:'histogram',marker:{color},nbinsx:20}],{title:{text:`Histogram — ${col}`,font:{size:12}}});
+    if(chartKey==='boxplot')   return plotBig(el,[{y:vals,type:'box',marker:{color},boxpoints:'outliers'}],{title:{text:`Boxplot — ${col}`,font:{size:12}},xaxis:{visible:false}});
+    if(chartKey==='density')   return plotBig(el,[{x:vals,type:'histogram',histnorm:'probability density',marker:{color},opacity:0.8}],{title:{text:`Density — ${col}`,font:{size:12}}});
+    if(chartKey==='violin')    return plotBig(el,[{y:vals,type:'violin',marker:{color},box:{visible:true},meanline:{visible:true}}],{title:{text:`Violin — ${col}`,font:{size:12}},xaxis:{visible:false}});
+  }
+  if(secKey==='cat'){
+    if(chartKey==='pie'||chartKey==='donut') return plotBig(el,[{labels:info.labels,values:info.counts,type:'pie',marker:{colors:cArr},textinfo:'percent+label'}],{title:{text:`${chartKey==='donut'?'Donut':'Pie'} — ${col}`,font:{size:12}},showlegend:true,height:340});
+    if(chartKey==='countplot') return plotBig(el,[{y:info.labels,x:info.counts,type:'bar',orientation:'h',marker:{color}}],{title:{text:`Count Plot — ${col}`,font:{size:12}},yaxis:{automargin:true}});
+    if(chartKey==='pareto'){
+      const total=info.counts.reduce((a,b)=>a+b,0);let cum=0;
+      const cumPct=info.counts.map(v=>{cum+=v;return cum/total*100;});
+      return plotBig(el,[{x:info.labels,y:info.counts,type:'bar',name:'Count',marker:{color}},{x:info.labels,y:cumPct,type:'scatter',mode:'lines+markers',name:'Cumulative %',yaxis:'y2',marker:{color:COLORS[4],size:7},line:{width:2}}],{title:{text:`Pareto — ${col}`,font:{size:12}},yaxis2:{overlaying:'y',side:'right',range:[0,110],title:{text:'Cumulative %'},ticksuffix:'%'},xaxis:{tickangle:-30}});
+    }
+    // default bar
+    return plotBig(el,[{x:info.labels,y:info.counts,type:'bar',marker:{color:cArr,line:{color:'white',width:1}}}],{title:{text:`Bar Chart — ${col}`,font:{size:12}},xaxis:{tickangle:-30}});
+  }
+}
+
+/**
+ * Build chart type dropdown for user override in viz page.
+ * Returns HTML select element string.
+ */
+function buildChartTypeDropdown(secKey, col, currentKey, onChangeFn){
+  const allCharts = CHART_RECS?.[secKey]?.[col]?.all_charts;
+  if(!allCharts) return '';
+  const labels = {
+    histogram:'Histogram',boxplot:'Boxplot',density:'Density Plot',
+    qqplot:'QQ Plot',violin:'Violin Plot',
+    bar:'Bar Chart',pie:'Pie Chart',donut:'Donut Chart',
+    countplot:'Count Plot',pareto:'Pareto Chart',
+  };
+  const opts = allCharts.map(k=>`<option value="${k}" ${k===currentKey?'selected':''}>${labels[k]||k}</option>`).join('');
+  return `<select class="viz-select" style="font-size:10px;padding:2px 5px" onchange="${onChangeFn}(this,'${secKey}','${col}')">${opts}</select>`;
+}
+
+/* ================================================================
+   SMART INSIGHTS — improved rendering (data scientist voice)
+   ================================================================ */
+/* ================================================================
+   SMART INSIGHTS — Executive-level rendering
+   ================================================================ */
+function loadInsights(){
+  if(!AD) return;
+  const quality = AD.quality;
+  const isClean = quality?.is_clean;
+
+  ['siOverviewBody','siQualityBody','siNumBody','siCatBody','siCorrBody','siRecBody'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.innerHTML=`<div class="al al-l"><span class="spin"></span> ${isClean?'Menganalisis dengan AI...':'Menganalisis data...'}</div>`;
+  });
+
+  fetch(`/insights?lang=${LANG}`).then(r=>r.json()).then(d=>{
+    if(d.error){
+      document.getElementById('siOverviewBody').innerHTML=`<div class="al al-er"><i class="fa-solid fa-triangle-exclamation"></i> ${d.error}</div>`;
+      return;
+    }
+
+    const isAI = d.source === 'claude_api';
+    const sourceBadge = isAI
+      ? `<span style="background:#f3eeff;color:#7c3aed;font-size:9px;font-weight:700;padding:2px 8px;border-radius:10px;margin-left:8px">✨ AI-Generated</span>`
+      : `<span style="background:var(--acs);color:var(--ac);font-size:9px;font-weight:700;padding:2px 8px;border-radius:10px;margin-left:8px">Rule-Based</span>`;
+
+    // ── EXECUTIVE SUMMARY ─────────────────────────────────────────────────────
+    const ov = document.getElementById('siOverviewBody');
+    let ovHtml = '';
+    if(!isClean){
+      ovHtml += `<div style="background:#fff8e1;border:1px solid #fde68a;border-left:4px solid #d97706;border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:11px;color:#92400e">
+        <b>⚠️ Perhatian:</b> Data belum sepenuhnya bersih (${quality?.total_missing||0} missing, ${quality?.duplicates||0} duplikat, ${quality?.outliers||0} outlier).
+        Insight di bawah dihasilkan dari kondisi data saat ini — akurasi meningkat setelah pembersihan.
+        <button onclick="go('clean')" style="margin-left:8px;background:#d97706;color:white;border:none;padding:3px 10px;border-radius:5px;cursor:pointer;font-size:10px;font-weight:700">Bersihkan Data →</button>
+      </div>`;
+    }
+    ovHtml += `<div style="background:linear-gradient(135deg,var(--acs),var(--sf));border:1px solid var(--ac);border-radius:10px;padding:14px 16px;margin-bottom:10px">
+      <div style="font-size:10px;font-weight:700;color:var(--ac);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">
+        📋 Executive Summary${sourceBadge}
+      </div>
+      <div style="font-size:12px;color:var(--tp);line-height:1.7">${d.executive_summary||'—'}</div>
+    </div>`;
+    if(d.data_quality_verdict){
+      ovHtml += `<div style="font-size:11px;color:var(--ts);padding:8px 12px;background:var(--sf2);border:1px solid var(--bd);border-radius:7px">
+        <i class="fa-solid fa-shield-halved" style="color:var(--ac);margin-right:5px"></i>${d.data_quality_verdict}
+      </div>`;
+    }
+    ov.innerHTML = ovHtml;
+
+    // ── KEY FINDINGS ──────────────────────────────────────────────────────────
+    const qv = document.getElementById('siQualityBody');
+    const findings = d.key_findings || [];
+    const sevStyle = {
+      critical:{bg:'#fee2e2',border:'#dc2626',icon:'🚨',label:'KRITIS'},
+      high:    {bg:'#fff1f2',border:'#f43f5e',icon:'🔴',label:'TINGGI'},
+      medium:  {bg:'#fff8e1',border:'#d97706',icon:'🟡',label:'SEDANG'},
+      low:     {bg:'#e0f7fb',border:'#0891b2',icon:'🔵',label:'RENDAH'},
+      info:    {bg:'var(--acs)',border:'var(--ac)',icon:'ℹ️',label:'INFO'},
+    };
+    qv.innerHTML = findings.length ? findings.map(f=>{
+      const s = sevStyle[f.severity]||sevStyle.info;
+      return `<div style="display:flex;gap:10px;margin-bottom:8px;padding:10px 12px;background:${s.bg};border:1px solid ${s.border};border-radius:8px;border-left:4px solid ${s.border}">
+        <div style="flex-shrink:0;text-align:center">
+          <div style="font-size:16px">${s.icon}</div>
+          <div style="font-size:7px;font-weight:700;color:${s.border};white-space:nowrap;margin-top:2px">${s.label}</div>
+        </div>
+        <div>
+          <div style="font-size:11px;font-weight:700;color:var(--tp);margin-bottom:3px">${f.finding}</div>
+          <div style="font-size:10px;color:var(--ts);line-height:1.5"><i class="fa-solid fa-arrow-right" style="color:${s.border};margin-right:4px"></i>${f.impact}</div>
+        </div>
+      </div>`;
+    }).join('') : '<div class="al al-ok">✅ Tidak ada temuan kritis.</div>';
+
+    // ── VARIABLE INSIGHTS ─────────────────────────────────────────────────────
+    const vars = d.variable_insights || [];
+    const numVars = vars.filter(v=>v.type==='numerical');
+    const catVars = vars.filter(v=>v.type==='categorical');
+
+    const nv = document.getElementById('siNumBody');
+    nv.innerHTML = numVars.length ? numVars.map(v=>`
+      <div style="margin-bottom:10px;padding:10px;background:var(--sf2);border:1px solid var(--bd);border-radius:8px;border-left:3px solid var(--k1)">
+        <div style="font-weight:700;color:var(--k1);font-size:11px;margin-bottom:4px">📊 ${v.variable}</div>
+        <div style="font-size:11px;color:var(--tp);margin-bottom:4px;line-height:1.5">${v.insight}</div>
+        <div style="font-size:10px;color:var(--tm);font-style:italic"><i class="fa-solid fa-briefcase" style="margin-right:4px"></i>${v.business_relevance||''}</div>
+      </div>`).join('')
+    : `<p style="color:var(--tm);font-size:11px">Tidak ada variabel numerik.</p>`;
+
+    const cv = document.getElementById('siCatBody');
+    cv.innerHTML = catVars.length ? catVars.map(v=>`
+      <div style="margin-bottom:10px;padding:10px;background:var(--sf2);border:1px solid var(--bd);border-radius:8px;border-left:3px solid var(--k2)">
+        <div style="font-weight:700;color:var(--k2);font-size:11px;margin-bottom:4px">🏷️ ${v.variable}</div>
+        <div style="font-size:11px;color:var(--tp);margin-bottom:4px;line-height:1.5">${v.insight}</div>
+        <div style="font-size:10px;color:var(--tm);font-style:italic"><i class="fa-solid fa-briefcase" style="margin-right:4px"></i>${v.business_relevance||''}</div>
+      </div>`).join('')
+    : `<p style="color:var(--tm);font-size:11px">Tidak ada variabel kategorikal.</p>`;
+
+    // ── CORRELATIONS ──────────────────────────────────────────────────────────
+    const corv = document.getElementById('siCorrBody');
+    corv.innerHTML = `<div style="font-size:11px;color:var(--ts);line-height:1.7;padding:10px;background:var(--sf2);border:1px solid var(--bd);border-radius:8px">
+      <i class="fa-solid fa-circle-nodes" style="color:var(--k3);margin-right:6px"></i>${d.correlations_insight||'—'}
+    </div>`;
+
+    // ── RECOMMENDATIONS ───────────────────────────────────────────────────────
+    const rv = document.getElementById('siRecBody');
+    const recs = d.recommendations || [];
+    const priStyle = {
+      segera:        {color:'#dc2626',bg:'#fee2e2',border:'#dc2626',icon:'🔥',label:'SEGERA'},
+      jangka_pendek: {color:'#d97706',bg:'#fff8e1',border:'#d97706',icon:'⏰',label:'JANGKA PENDEK'},
+      jangka_panjang:{color:'#0891b2',bg:'#e0f7fb',border:'#0891b2',icon:'📅',label:'JANGKA PANJANG'},
+      immediate:     {color:'#dc2626',bg:'#fee2e2',border:'#dc2626',icon:'🔥',label:'IMMEDIATE'},
+      short_term:    {color:'#d97706',bg:'#fff8e1',border:'#d97706',icon:'⏰',label:'SHORT TERM'},
+      long_term:     {color:'#0891b2',bg:'#e0f7fb',border:'#0891b2',icon:'📅',label:'LONG TERM'},
+    };
+    rv.innerHTML = recs.length
+      ? `<div style="font-size:11px;color:var(--ts);margin-bottom:10px">Rekomendasi disusun berdasarkan urgensi untuk pengambilan keputusan:</div>`
+        + recs.map(r=>{
+          const s = priStyle[r.priority]||{color:'var(--ac)',bg:'var(--acs)',border:'var(--ac)',icon:'💡',label:'INFO'};
+          return `<div style="display:flex;gap:10px;margin-bottom:8px;padding:10px 12px;background:${s.bg};border:1px solid ${s.border};border-radius:8px;border-left:4px solid ${s.border}">
+            <div style="flex-shrink:0;text-align:center;min-width:40px">
+              <div style="font-size:16px">${s.icon}</div>
+              <div style="font-size:7px;font-weight:700;color:${s.color};white-space:nowrap;margin-top:1px">${s.label}</div>
+            </div>
+            <div>
+              <div style="font-size:11px;font-weight:700;color:var(--tp);margin-bottom:3px">${r.action}</div>
+              <div style="font-size:10px;color:var(--ts);line-height:1.5;font-style:italic">${r.rationale||''}</div>
+            </div>
+          </div>`;
+        }).join('')
+      : `<div class="al al-ok">✅ Tidak ada rekomendasi tambahan — data dan analisis sudah optimal.</div>`;
+
+  }).catch(e=>{
+    document.getElementById('siOverviewBody').innerHTML=`<div class="al al-er"><i class="fa-solid fa-triangle-exclamation"></i> ${e.message}</div>`;
+  });
+}
+
+/* ================================================================
+   EXPORT — bilingual, with preview
+   ================================================================ */
+function _getExpLang(){
+  return LANG;  // Report language follows the dashboard language toggle
+}
+
+function doExp(fmt){
+  const st=document.getElementById('expSt');
+  if(!AD){st.innerHTML=`<div class="al al-er"><i class="fa-solid fa-triangle-exclamation"></i> ${t('upload_first_short')}</div>`;return;}
+  const lang=_getExpLang();
+  st.innerHTML=`<div class="al al-l"><span class="spin"></span> ${t('generating')}...</div>`;
+  const a=document.createElement('a');
+  a.href=`/export/${fmt}?lang=${lang}`;
+  a.click();
+  setTimeout(()=>{
+    // Show Preview button only after PDF (or HTML) report has been generated/downloaded
+    if(fmt==='pdf'||fmt==='html'){
+      st.innerHTML=`<div class="al al-ok"><i class="fa-solid fa-circle-check"></i> File berhasil didownload.
+        <button onclick="doExpPreview()" style="margin-left:10px;background:var(--ac);color:white;border:none;padding:4px 12px;border-radius:6px;cursor:pointer;font-size:11px;font-weight:700">
+          <i class="fa-solid fa-eye"></i> Preview & Print
+        </button>
+      </div>`;
+    } else {
+      st.innerHTML=`<div class="al al-ok"><i class="fa-solid fa-circle-check"></i> File berhasil didownload.</div>`;
+    }
+  },1500);
+}
+
+function doExpPreview(){
+  const lang=_getExpLang();
+  window.open(`/export/preview?lang=${lang}`, '_blank');
+}
+</script>
+</body>
+</html>
